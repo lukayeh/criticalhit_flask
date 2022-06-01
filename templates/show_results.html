@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h3>&#128214; Results: </h3>
+     <hr>
+     {% set count = namespace(value=1) %}
+     {% for result in myResults %}
+
+      <!--         return(match,roundup,result,winner,loser) -->
+
+          <h4>Segment #{{ count.value }}</h4>
+          {% set count.value = count.value + 1 %}
+
+          {{result[3]}} vs {{result[4]}}
+          <hr>
+          <!-- {{array|safe}} -->
+          <h4>Roundup</h4>
+              <div class="header"><span>Expand</span>
+          
+              </div>
+              <div class="content">
+              <code>
+                  <ul>
+                      {% for output in result[1] %}
+                      <li>{{ output|safe }}</li>
+                      {% endfor %}
+                  </ul>
+              </code>
+              <br>
+              </div>
+          <hr>
+          <h4>Winner</h4>
+          {{result[3]}} &#127881;
+          <hr>
+          <h5>Breakdown</h5>
+          <b>Star rating:</b>
+          {% for x in range(0, result[5]) %}
+          &#11088;  
+          {% endfor %}
+          <hr>
+          <hr>
+          <hr>
+          <hr>
+  
+
+{% endfor %}
+
+
+</div>
+
+
+
+    <script src="../static/js/booker_post.js"></script>
+
+
+{% endblock %}

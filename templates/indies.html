@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>&#128104; Roster: </h3>
+<hr>
+<div class="bg-white border rcorners1">
+  <section class="w-100 p-4">
+    <table id="roster-table" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Active</th>
+          <th>Atck</th>
+          <th>Def</th>
+          <th>W</th>
+          <th>L</th>
+          <th>Health</th>
+          <th>Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for members in roster %}
+          <tr>
+            <!-- name,real_name,role,association,accolade,active,attack,defense,health,level -->
+            <td>
+              <a href="{{ url_for('member', member_id=members.id) }}">
+                {{ members.name }}
+              </a>
+            </td>
+            <td>{{ members.role }}</td>
+            <td>{{ members.active }}</td>
+            <!-- <td>{{ members.attack }}</td> -->
+            <td>
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width:{{(members.attack | int) / 20 * 100 }}%" aria-valuenow="{{members.attack}}" aria-valuemin="0" aria-valuemax="100">{{members.attack}}</div>
+              </div>
+            </td>
+            <!-- <td>{{ members.defense }}</td> -->
+            <td>
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width:{{(members.defense | int) / 20 * 100 }}%" aria-valuenow="{{members.defense}}" aria-valuemin="0" aria-valuemax="100">{{members.defense}}</div>
+              </div>
+            </td>
+            <td>{{ members.wins }}</td>
+            <td>{{ members.losses }}</td>
+            <!-- <td>{{ members.health }}</td>
+            -->
+            <td>
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width:{{(members.health | int) / 100 * 100 }}%" aria-valuenow="{{members.health}}" aria-valuemin="0" aria-valuemax="100">{{members.health}}</div>
+              </div>
+              </td>
+            <td>{{ members.level }}</td>
+
+
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+{% endblock %}
+
+  <!-- <script src="{{url_for('static', filename='somejavascriptfile.js')}}"></script> -->

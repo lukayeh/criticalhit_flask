@@ -1,0 +1,130 @@
+{% from 'bootstrap5/nav.html' import render_nav_item %}
+{% from 'bootstrap5/utils.html' import render_messages %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{title}}</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    {{ bootstrap.load_css() }}
+    <style>
+        pre {
+            background: #ddd;
+            padding: 10px;
+        }
+        
+        h2 {
+            margin-top: 20px;
+        }
+        
+        footer {
+            margin: 20px;
+        }
+        
+        .container .content {
+        display: none;
+        padding : 5px;
+        }
+
+        img.rounded {
+        object-fit: cover;
+        border-radius: 50%;
+        height: 100px;
+        width: 100px;
+        }
+
+        .myimg{
+        width:100px;
+        height:100px;
+        object-fit:cover;
+        border-radius:50%;
+        }
+
+        form {
+        display: inline;
+        }
+
+        .myimg_member{
+        width:300px;
+        height:300px;
+        object-fit:cover;
+        border-radius:50%;
+        }
+
+        .rcorners1 {
+        border-radius: 15px;
+        padding: 10px; 
+        /* width: 200px;
+        height: 150px;  */
+        }
+
+    </style>
+</head>
+<body>
+    <!----------------------------------------------------------------->
+    <!------------------      Nav bar start  -------------------------->
+    <!----------------------------------------------------------------->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                {{ render_nav_item('home', 'Home', use_li=True) }}
+                {{ render_nav_item('roster', 'Roster', use_li=True) }}
+                <!-- {{ render_nav_item('booker', 'Booker', use_li=True) }} -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Booker</a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="{{ url_for('booker') }}">Booker</a></li>
+                      <li><a class="dropdown-item" href="{{ url_for('results') }}">Results</a></li>
+                      <li><a class="dropdown-item" href="{{ url_for('show_booker') }}">Book a show</a></li>
+
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Back Office</a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="{{ url_for('fueds') }}">Fueds</a></li>
+                      <li><a class="dropdown-item" href="{{ url_for('titles') }}">Titles</a></li>
+                      <li><a class="dropdown-item" href="{{ url_for('indies') }}">Indies</a></li>
+                    </ul>
+                </li>
+                {{ render_nav_item('companies', 'Companies', use_li=True) }}
+                <!-- {{ render_nav_item('titles', 'Titles', use_li=True) }} -->
+
+            </ul>
+        </div>
+
+        </div>
+    </nav>
+    <!----------------------------------------------------------------->
+    <!------------------      Nav bar end  -------------------------->
+    <!----------------------------------------------------------------->
+    
+    <main class="container">
+        {{ render_messages(container=False, dismissible=True) }}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="text-center">
+        {% block footer %}
+            <small> &copy; 2018–<script>document.write(new Date().getFullYear())</script> <a href="https://github.com/greyli">criticalhit</a>
+            </small>
+        {% endblock %}
+    </footer>
+
+    {{ bootstrap.load_js() }}
+</body>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.js"></script>
+<script src="../static/js/data-table.js"></script>
+</html>

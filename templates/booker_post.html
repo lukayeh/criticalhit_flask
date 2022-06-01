@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>&#128214; Results: </h3>
+<hr>
+
+<div class="bg-white border rcorners1">
+    <section class="w-100 p-4">
+        <h4>Match</h4>
+        {% for members in participants %}
+        <!-- <img id="image" class="myimg" src="{{members['img']}}" alt="wrestlers logo" width="200px">
+        <br> -->
+        {{members['name']}}
+            {% if not loop.last %}
+            vs
+            {% endif %}
+        {% endfor %}
+        <!-- {{booker[3]}} vs {{booker[4]}} -->
+        <hr>
+        <!-- {{array|safe}} -->
+        <h4>Roundup</h4>
+            <div class="header"><span>Expand</span>
+        
+            </div>
+            <div class="content">
+            <code>
+                <ul>
+                    {% for result in booker[1] %}
+                    <li>{{ result|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </code>
+            <br>
+            </div>
+        <hr>
+        <h4>Winner</h4>
+        {{booker[3]}} &#127881;
+        <hr>
+        <h5>Breakdown</h5>
+        <b>Star rating:</b>
+        {% for x in range(0, booker[5]) %}
+        &#11088;  
+        {% endfor %}
+    
+
+
+        <br>
+
+    </section>
+
+</div>
+
+
+
+
+    <script src="../static/js/booker_post.js"></script>
+
+
+{% endblock %}

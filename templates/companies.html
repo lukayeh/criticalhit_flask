@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h3>&#127970; Companies: </h3>
+  <hr>
+  <div class="bg-white border rcorners1">
+    <section class="w-100 p-4">
+  
+      <table id="data" class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for company in companies %}
+            <tr>
+              <!-- name,real_name,role,association,accolade,active,attack,defense,health,level -->
+              <td>
+                  {{ company.name }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </section>
+  </div>
+
+{% endblock %}
+
+  <!-- <script src="{{url_for('static', filename='somejavascriptfile.js')}}"></script> -->

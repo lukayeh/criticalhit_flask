@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+  <h3>&#128240; Booker history: </h3>
+  <hr>
+  <div class="bg-white border rcorners1">
+    <section class="w-100 p-4">
+
+      <table id="data" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Result</th>
+              <th>Description</th>
+              <th>Rating</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {% for x in result %}
+              <tr>
+                <td>{{ x.created }}</td>
+                <td>{{ x.result }}</td>
+                <!-- <td>{{ x.description }}</td> -->
+                <td>
+                  {% set list1 = x.description.split(',') %}
+                  {% for i in list1 %} 
+                  {{i|safe}}<br>
+                  {% endfor %} -->
+                </td>
+                <td> 
+                  {% for x in range(0, x.rating) %}
+                  &#11088;  
+                  {% endfor %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+    </section>
+  </div>
+
+
+
+{% endblock %}
+

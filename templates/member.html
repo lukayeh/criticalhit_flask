@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>&#128104; Roster: </h3>
+<hr>
+<div class="bg-white border rcorners1">
+  <section class="w-100 p-4">
+
+  <div class='row'>
+    <div class="col-md-6"> 
+      {% for x in member %}
+      <table class="table">
+        <tbody>
+            <tr>
+              <th>Name</th>
+                <td>{{x.name}}</td>
+              </tr>
+            <tr>
+              <th>Real Name</th>
+                <td>{{x.real_name}}</td>
+            </tr>
+            <tr>
+              <th>Finisher</th>
+                <td>{{x.finisher}}</td>
+            </tr>
+            <tr>
+              <th>Associations</th>
+                <td>
+                  {% if "0" in x.association %}
+                  Independent 
+                  {% else %}
+                    {% set list1 = x.association.split(',') %}
+                      {% for item in list1 %}
+                        <li>{{ companies[item|int - 1]['name'] }}
+                      {% endfor %} 
+                  {% endif %}
+                </td>
+            </tr>
+            <tr>
+              <th>Accolades</th>
+                <!-- <td>{{x.accolade}}</td> -->
+              <td>
+              {% if "none" in x.accolade %}
+                none
+              {% else %}
+                {% set list1 = x.accolade.split(',') %}
+                  {% for item in list1 %}
+                    <li>{{ titles[item|int - 1]['name'] }}
+                  {% endfor %} 
+              {% endif %}
+            </td>
+            </tr>
+            <tr>
+              <th>Attack</th>
+              <td>
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width:{{(x.attack | int) / 20 * 100 }}%" aria-valuenow="{{x.attack}}" aria-valuemin="0" aria-valuemax="20">{{x.attack}}</div>
+              </div>
+              </td>
+            </tr>
+            <tr>
+              <th>Defense</th>
+                <!-- <td>{{x.defense}}</td> -->
+                <td>
+                <div class="progress">
+                  <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{(x.defense | int) / 20 * 100 }}%" aria-valuenow="{{x.defense}}" aria-valuemin="0" aria-valuemax="20">{{x.defense}}</div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>Health</th>
+              <td>
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width:{{(x.health | int) / 100 * 100 }}%" aria-valuenow="{{x.health}}" aria-valuemin="0" aria-valuemax="100">{{x.health}}</div>
+              </div>
+              </td>
+            </tr>
+            <tr>
+              <th>Wins</th>
+                <td>{{x.wins}}</td>
+            </tr>
+            <tr>
+              <th>Losses</th>
+                <td>{{x.losses}}</td>
+            </tr>
+            <tr>
+              <th>Level</th>
+                <td>{{x.level}}</td>
+            </tr>
+          </tbody>
+      </table>
+    </div>
+    <div class="col-md-6">    
+      <center>
+      <img id="playerOneImage" class="myimg_member" src="{{x.img}}" alt="wrestlers logo">
+      <hr>
+      <!-- Hire button -->
+      <form action="{{ url_for('hire_member') }}" method=post class=hire_member>
+        <input type=hidden value="{{ x.name }}"name=worker_name />
+        <input type=hidden value="{{ x.id }}"name=worker_to_hire />
+        <button type="submit" class="btn btn-primary">Hire</button>
+      </form>   
+      <!-- Fire button -->
+      <form action="{{ url_for('fire_member') }}" method=post class=fire_member>
+        <input type=hidden value="{{ x.name }}"name=worker_name />
+        <input type=hidden value="{{ x.id }}"name=worker_to_fire />
+        <button type="submit" onclick="return confirm('Are you sure you want to fire {{x.name}}?');" class="btn btn-primary">Fire</button>
+      </form>   
+      <!-- <button type="button" class="btn btn-primary">Fire</button> -->
+      <button type="button"  class="btn btn-primary">Edit</button>
+      </center>
+      <!-- <img src='https://i.imgur.com/W1NFjMi.png' alt="No image"> -->
+    </div>
+  </sections>
+  </div>
+
+
+
+  {% endfor %}
+
+
+</div>
+
+
+
+
+{% endblock %}
+
+<script>
+document
+    .getElementById("confirmClickActionElementId")
+    .addEventListener("click", function( e ){ //e => event
+        if( ! confirm("Do you really want to do this?") ){
+            e.preventDefault(); // ! => don't want to do this
+        } else {
+            //want to do this! => maybe do something about it?
+            alert('Ok, lets do this!');
+        }
+    });
+
+</script>
+  <!-- <script src="{{url_for('static', filename='somejavascriptfile.js')}}"></script> -->

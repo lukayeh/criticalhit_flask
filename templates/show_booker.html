@@ -1,0 +1,43 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<h3>&#128214; Choose your participants: </h3>
+<hr>
+
+<form action="show_post">
+    {% for x in range(1, 5) %}
+    <h4>Segment {{x}}</h4>    
+    <select id="select_guy" name="0{{x}}_participant1">
+        <option value="" selected="selected">Choose your first competitor...</option>
+        {% for members in roster %}
+        <option value="{{members['id']}}">{{members['name']}} (lvl: {{members["level"]}})</option>"
+        {% endfor %}
+    </select>
+    <b> vs </b>
+    <select id="select_guy_2" name="0{{x}}_participant2">
+        <option value="" selected="selected">Choose your second competitor...</option>
+        {% for members in roster %}
+        <option value="{{members['id']}}">{{members['name']}} (lvl: {{members["level"]}})</option>"
+        {% endfor %}
+    </select>
+    <br><br>    
+    {% endfor %}
+    <hr>
+    <input type="submit" value="Submit">
+    <hr>
+
+</form>
+
+<script src="../static/js/booker.js"></script>
+
+<script>
+
+
+</script>
+{% endblock %}
+
+
+

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>&#127941; Titles: </h3>
+<hr>
+<div class="bg-white border rcorners1">
+  <section class="w-100 p-4">
+    <table id="data" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Current Holder</th>
+          <th>Type</th>
+          <th>Image</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for title in titles %}
+          <tr>
+            <td>{{ title.name }}</td>
+            <td>
+              {% for member in roster %}
+              {% if title.id|safe in member.accolade %}
+              <li>{{member.name}}
+              {% endif %}
+              {% endfor %}
+            </td>
+            <td>{{ title.type }}</td>
+            <td>{{ title.img }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+{% endblock %}
+
+  <!-- <script src="{{url_for('static', filename='somejavascriptfile.js')}}"></script> -->
