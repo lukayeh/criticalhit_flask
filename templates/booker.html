@@ -8,7 +8,8 @@
 <hr>
 <div class="bg-white border rcorners1">
     <section class="w-100 p-4">
-        <form action="{{ url_for('booker_post') }}" method="post">
+
+        <form action="{{ url_for('booker_assets.booker_post') }}" method="post">
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -28,17 +29,42 @@
                 <tr>
                     <td> 
                         <select id="participant1" class="detailprodoption" name="participant1">
-                            <option value="" data-img-src="static/images/vacant.png" selected="selected">Choose your first competitor...</option>
+                            <option value="" data-title-var="none" data-img-src="static/images/vacant.png" selected="selected">Choose your first competitor...</option>
                             {% for members in roster %}
-                            <option value="{{members['id']}}" data-img-src="{{members['img']}}">{{members['name']}} (lvl: {{members["level"]}})</option>"
+                            <option value="{{members['id']}}"
+                                {% if "none" in members.accolade %}
+                                    data-title-var="none" 
+                                    data-title-id="none" 
+                                {% else %}
+                                {% set list1 = members.accolade.split(',') %}
+                                {% for item in list1 %}
+                                    data-title-var="{{ titles[item|int - 1]['name'] }}" 
+                                    data-title-id="{{ titles[item|int - 1]['id'] }}"
+                                {% endfor %} 
+                                {% endif %}
+                                data-img-src="{{members['img']}}">{{members['name']}} (lvl: {{members["level"]}})
+                            </option>"
                             {% endfor %}
                         </select>
+
+
                     </td>
                     <td>
                         <select id="participant2" class="detailprodoption_2" name="participant2">
                             <option value="" selected="selected">Choose your second competitor...</option>
                             {% for members in roster %}
-                            <option value="{{members['id']}}" data-img-src="{{members['img']}}">{{members['name']}} (lvl: {{members["level"]}})</option>"
+                            <option value="{{members['id']}}" 
+                            {% if "none" in members.accolade %}
+                                data-title-var="none" 
+                                data-title-id="none" 
+                            {% else %}
+                            {% set list1 = members.accolade.split(',') %}
+                            {% for item in list1 %}
+                                data-title-var="{{ titles[item|int - 1]['name'] }}" 
+                                data-title-id="{{ titles[item|int - 1]['id'] }}"
+                            {% endfor %} 
+                            {% endif %}
+                                data-img-src="{{members['img']}}">{{members['name']}} (lvl: {{members["level"]}})</option>"
                             {% endfor %}
                         </select>
                     </td>
@@ -54,7 +80,20 @@
             <!-- run_in moment -->
             <input class="form-check-input" type="checkbox" id="run_in" name="run_in" value="true">
             <label for="run_in">&#127939; Random Run In</label><br>
-
+            <hr>
+            <b>&#129351; Titles:</b>
+            <br>
+            <!-- Title for Participant 1 -->
+            <div style='display:none;' id='title_1'>
+                <input class="form-check-input" type="checkbox" id="titlematch_1" name="titlematch" value="">
+                <label for="titlematch"><p id="title_text"></p></label>
+            </div>
+            <!-- Title for Participant 2 -->
+            <div style='display:none;' id='title_2'>
+                <input class="form-check-input" type="checkbox" id="titlematch_2" name="titlematch_2" value="">
+                <label for="titlematch_2"><p id="title_2_text"></p></label>
+            </div>
+   
             <hr>
 
             <input type="submit" value="Submit">
@@ -69,13 +108,88 @@
 $('.detailprodoption').change(function () {
     var image = document.getElementById("playerOneImage").src;
     $('img[id=playerOneImage]').attr("src", $( this ).find( "option:selected" ).data( "img-src" ));
+
+    // Title functionality 
+    var selected = document.getElementById("participant1");
+    var text = selected.options[selected.selectedIndex].getAttribute('data-title-var');
+    var id = selected.options[selected.selectedIndex].getAttribute('data-title-id');
+    document.getElementById('title_text').innerHTML = text;
+    
+    // show div functionality 
+    var e = document.getElementById("participant1");
+    var strUser = e.options[e.selectedIndex].getAttribute('data-title-var');
+    // console.log(strUser)
+    var $div =  $("#title_1");
+    if(strUser != "none")    {
+        $div.show();
+    }
+    else
+    {
+        $div.hide();
+    }
+
+    $('#titlematch_1').click(function() {
+        if ($(this).prop("checked")) {
+            $(this).val(id);
+        } else {
+            console.log('no');
+            $(this).val('no');
+        }
+    });
+
 });
 
 $('.detailprodoption_2').change(function () {
     var image = document.getElementById("playerTwoImage").src;
     $('img[id=playerTwoImage]').attr("src", $( this ).find( "option:selected" ).data( "img-src" ));
+    
+    // Title functionality
+    var selected = document.getElementById("participant2");
+    var text = selected.options[selected.selectedIndex].getAttribute('data-title-var');
+    var id = selected.options[selected.selectedIndex].getAttribute('data-title-id');
+    document.getElementById('title_2_text').innerHTML = text;
+    
+    // show div functionality 
+    var e = document.getElementById("participant2");
+    var strUser = e.options[e.selectedIndex].getAttribute('data-title-var');
+    console.log(strUser)
+    var $div =  $("#title_2");
+    if(strUser != "none")    {
+        $div.show();
+    }
+    else
+    {
+        $div.hide();
+    }
+
+    // Set the title value from the checkbox!
+    $('#titlematch_2').click(function() {
+        
+        if ($(this).prop("checked")) {
+            console.log(document.getElementById('title_2_text').innerHTML);
+            $(this).val(id);
+        } else {
+            console.log('no');
+            $(this).val('no');
+        }
+    });
 });
 
+
+
+// $('.detailprodoption').change(function () {
+//     var e = document.getElementById("participant1");
+//     var strUser = e.options[e.selectedIndex].getAttribute('data-title-var');
+//     console.log(strUser)
+//     var $div =  $("#title_1");
+//     if(strUser != "none")    {
+//         $div.show();
+//     }
+//     else
+//     {
+//         $div.hide();
+//     }
+// });
 
 </script>
 

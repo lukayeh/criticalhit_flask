@@ -14,9 +14,18 @@
     {{ bootstrap.load_css() }}
     <style>
         pre {
-            background: #ddd;
+            background: rgb(60, 60, 60);
             padding: 10px;
         }
+
+        /* hr {
+            height: 1px;
+            background-color: #d8d8d8;
+            border: none;
+            width: 100%;
+            margin: 0px;
+        } */ */
+
         
         h2 {
             margin-top: 20px;
@@ -56,6 +65,13 @@
         border-radius:50%;
         }
 
+        .myimg_roster{
+        width:20px;
+        height:20px;
+        object-fit:cover;
+        border-radius:50%;
+        }
+
         .rcorners1 {
         border-radius: 15px;
         padding: 10px; 
@@ -77,28 +93,26 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                {{ render_nav_item('home', 'Home', use_li=True) }}
-                {{ render_nav_item('roster', 'Roster', use_li=True) }}
-                <!-- {{ render_nav_item('booker', 'Booker', use_li=True) }} -->
+                {{ render_nav_item('home_assets.home', 'Home', use_li=True) }}
+                {{ render_nav_item('roster_assets.roster', 'Roster', use_li=True) }}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Booker</a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="{{ url_for('booker') }}">Booker</a></li>
-                      <li><a class="dropdown-item" href="{{ url_for('results') }}">Results</a></li>
-                      <li><a class="dropdown-item" href="{{ url_for('show_booker') }}">Book a show</a></li>
+                      <li><a class="dropdown-item" href="{{ url_for('booker_assets.booker') }}">Booker</a></li>
+                      <li><a class="dropdown-item" href="{{ url_for('results_assets.results') }}">Results</a></li>
+                      <li><a class="dropdown-item" href="{{ url_for('show_booker_assets.show_booker') }}">Book a show</a></li>
 
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Back Office</a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="{{ url_for('fueds') }}">Fueds</a></li>
-                      <li><a class="dropdown-item" href="{{ url_for('titles') }}">Titles</a></li>
-                      <li><a class="dropdown-item" href="{{ url_for('indies') }}">Indies</a></li>
+                      <li><a class="dropdown-item" href="{{ url_for('fueds_assets.fueds') }}">Fueds</a></li>
+                      <li><a class="dropdown-item" href="{{ url_for('titles_assets.titles') }}">Titles</a></li>
+                      <li><a class="dropdown-item" href="{{ url_for('indies_assets.indies') }}">Indies</a></li>
                     </ul>
                 </li>
-                {{ render_nav_item('companies', 'Companies', use_li=True) }}
-                <!-- {{ render_nav_item('titles', 'Titles', use_li=True) }} -->
+                {{ render_nav_item('companies_assets.companies', 'Companies', use_li=True) }}
 
             </ul>
         </div>

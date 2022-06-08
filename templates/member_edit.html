@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>&#128104; Edit Member: </h3>
+<hr>
+<div class="bg-white border rcorners1">
+  <section class="w-100 p-4">
+
+    <form action="{{ url_for('member_assets.submit_member') }}" method="post" class="row g-3">
+      {% for x in member %}        
+      <div class="col-md-6">
+        <label for="inputName" class="form-label">Name</label>
+        <input type="name" name="name" class="form-control" id="inputName" value="{{x['name']}}">
+      </div>
+      <div class="col-md-6">
+        <input type="hidden" name="id" class="form-control" id="inputID" value="{{x['id']}}">
+      </div>
+      <div class="col-md-6">
+        <label for="realName" class="form-label">Real Name</label>
+        <input type="name" name="realName" class="form-control" id="realName" value="{{x['real_name']}}">
+      </div>
+      <div class="col-md-6">
+        <label for="role" class="form-label">Role</label>
+        <input type="name" name="role" class="form-control" id="role" value="{{x['role']}}">
+      </div>
+      <div class="col-md-6">
+        <label for="association" class="form-label">Association</label>
+        <input type="association" name="association" class="form-control" id="association" value="{{x['association']}}">
+      </div>
+      <div class="col-md-6">
+        <label for="accolade" class="form-label">Accolade</label>
+        <input type="accolade" name="accolade" class="form-control" id="accolade" value="{{x['accolade']}}">
+      </div>
+      <div class="col-md-6">
+        <label for="active" class="form-label">Active</label>
+        <input type="active" name="active" class="form-control" id="active" value="{{x['active']}}">
+      </div>
+      <div class="col-md-6">
+        <label for="finisher" class="form-label">Finisher</label>
+        <input type="finisher" name="finisher" class="form-control" id="finisher" value="{{x['finisher']}}">
+      </div>
+      <div class="col-md-6">
+        <label for="attack" class="form-label">Attack</label>
+        <input type="attack" name="attack" class="form-control" id="attack" value="{{x['attack']}}">
+      </div>
+      <div class="col-md-6">
+        <label for="defense" class="form-label">Defense</label>
+        <input type="defense" name="defense" class="form-control" id="defense" value="{{x['defense']}}">
+      </div>
+      <div class="col-md-6">
+        <label for="health" class="form-label">Health</label>
+        <input type="health" name="health" class="form-control" id="health" value="{{x['health']}}">
+      </div>
+      <div class="col-md-6">
+        <label for="level" class="form-label">Level</label>
+        <input type="level" name="level" class="form-control" id="level" value="{{x['level']}}">
+      </div>
+      <div class="col-md-6">
+        <label for="wins" class="form-label">Wins</label>
+        <input type="wins" name="wins" class="form-control" id="wins" value="{{x['wins']}}">
+      </div>
+      <div class="col-md-6">
+        <label for="losses" class="form-label">Losses</label>
+        <input type="losses" name="losses" class="form-control" id="losses" value="{{x['losses']}}">
+      </div>
+
+
+      <div class="col-12">
+        <label for="img" class="form-label">Image</label>
+        <input type="img" name="img" class="form-control" id="img" value="{{x['img']}}">
+      </div>
+      
+      <div class="col-12">
+        
+        <input type="submit" class="btn btn-primary"></input>
+      </div>
+      {% endfor %}
+
+    </form>
+
+
+  </sections>
+  </div>
+
+
+
+
+
+</div>
+
+
+
+
+{% endblock %}
+

@@ -5,7 +5,7 @@
 <hr>
 <div class="bg-white border rcorners1">
   <section class="w-100 p-4">
-    <a href="{{ url_for('create_fued') }}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Create</a>
+    <a href="{{ url_for('fueds_assets.create_fued') }}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Create</a>
     <hr>
     <table id="roster-table" class="table table-striped">
       <thead>
@@ -52,7 +52,7 @@
           <td>
             <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button>
             <button type="button" class="btn btn-success btn-sm"><i class="fa fa-edit"></i></button>
-            <form action="{{ url_for('delete_fued') }}" method=post class=delete-fued>
+            <form action="{{ url_for('fueds_assets.delete_fued') }}" method=post class=delete-fued>
               <input type=hidden value="{{ fued.id }}"name=fued_to_delete />
               <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
             </form>       
