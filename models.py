@@ -1,6 +1,6 @@
 from app import db
 from sqlalchemy.sql import func
-
+from flask_login import UserMixin
 
 class Roster(db.Model):
     __table_args__ = {'extend_existing': True}
@@ -45,73 +45,62 @@ class Titles(db.Model):
 
     def __repr__(self):
         return f'<Title {self.name}>'
-    # def __init__(self, name, price, calories):
-    #     se
-    #     self.name = name
-    #     self.real_name = real_name
-    #     self.role = role
-    #     self.association = association
-    #     self.accolade = accolade
-    #     self.active = active
-    #     self.finisher = finisher
-    #     self.attack = attack
-    #     self.defense = defense
-    #     self.health = health
-    #     self.level = level
-    #     self.wins = wins
-    #     self.losses = losses
-    #     self.img = img
 
-    # def calories_per_dollar(self):
-    #     if self.calories:
-    #         return self.calories / self.price
+class Fueds(db.Model):
+    __table_args__ = {'extend_existing': True}
+    # See http://flask-sqlalchemy.pocoo.org/2.0/models/#simple-example
+    # for details on the column types.
 
+    # We always need an id
+    id = db.Column(db.Integer, primary_key=True)
+    created = db.Column(db.DateTime(timezone=True),
+                           server_default=func.now())
+    participant_1 = db.Column(db.String(100))
+    participant_2 = db.Column(db.String(100))
+    popularity = db.Column(db.String(100))
+    status = db.Column(db.String(100))    
+    company = db.Column(db.String(100))    
 
-# class Dessert(db.Model):
-#     # See http://flask-sqlalchemy.pocoo.org/2.0/models/#simple-example
-#     # for details on the column types.
+    def __repr__(self):
+        return f'<Fueds {self.id}>'
 
-#     # We always need an id
-#     id = db.Column(db.Integer, primary_key=True)
+class Companies(db.Model):
+    __table_args__ = {'extend_existing': True}
+    # See http://flask-sqlalchemy.pocoo.org/2.0/models/#simple-example
+    # for details on the column types.
 
-#     # A dessert has a name, a price and some calories:
-#     name = db.Column(db.String(100))
-#     price = db.Column(db.Float)
-#     calories = db.Column(db.Integer)
+    # We always need an id
+    id = db.Column(db.Integer, primary_key=True)
+    created = db.Column(db.DateTime(timezone=True),
+                           server_default=func.now())
+    name = db.Column(db.String(100))
+    img = db.Column(db.String(100))
 
-#     def __init__(self, name, price, calories):
-#         self.name = name
-#         self.price = price
-#         self.calories = calories
+    def __repr__(self):
+        return f'<Companies {self.name}>'
 
-#     def calories_per_dollar(self):
-#         if self.calories:
-#             return self.calories / self.price
+class Result(db.Model):
+    __table_args__ = {'extend_existing': True}
+    # See http://flask-sqlalchemy.pocoo.org/2.0/models/#simple-example
+    # for details on the column types.
 
+    # We always need an id
+    id = db.Column(db.Integer, primary_key=True)
+    created = db.Column(db.DateTime(timezone=True),
+                           server_default=func.now())
+    result = db.Column(db.String(100))
+    description = db.Column(db.String(1000))
+    rating = db.Column(db.Integer)
 
-# class Menu(db.Model):
+    def __repr__(self):
+        return f'<Results {self.id}>'
 
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(100))
-
-#     def __init__(self, name):
-#         self.name = name
-
-
-# def create_dessert(new_name, new_price, new_calories):
-#     # Create a dessert with the provided input.
-#     # At first, we will trust the user.
-
-#     # This line maps to line 16 above (the Dessert.__init__ method)
-#     dessert = Dessert(new_name, new_price, new_calories)
-
-#     # Actually add this dessert to the database
-#     db.session.add(dessert)
-
-#     # Save all pending changes to the database
-#     db.session.commit()
-
-#     return dessert
+class User(UserMixin,db.Model):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    email = db.Column(db.String(100), unique=True)
+    password = db.Column(db.String(100))
+    name = db.Column(db.String(1000))
 
 
 if __name__ == "__main__":

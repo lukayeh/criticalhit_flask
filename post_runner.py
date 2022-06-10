@@ -2,6 +2,7 @@ import os, json
 import logging
 import random
 from random import randint
+from unicodedata import name
 from colorama import Fore, Back, Style
 
 
@@ -13,15 +14,16 @@ def booker(participants,bonuses,omgmoment,runin_moment):
 
     print("Running the post_runner")
     print(f"BONUS IS {bonuses}")
-
-    attacker_key = participants[0]['name']
-    defender_key = participants[1]['name']
     attacker     = participants[0]
     defender     = participants[1]
-    comeback_plus = 5
+    attacker_key = attacker.name
+    defender_key = defender.name
+    attacker.match_role = "attacker"
+    defender.match_role = "defender"
+    attacker_health = attacker.health
+    defender_health = defender.health
 
-    attacker["role"] = "attacker"
-    defender["role"] = "defender"
+    comeback_plus = 5
 
     print( Fore.GREEN + str(attacker_key).upper() + " VS " + str(defender_key).upper() + Style.RESET_ALL)
     match=f"{str(attacker_key)} VS {str(defender_key)}"
@@ -42,9 +44,9 @@ def booker(participants,bonuses,omgmoment,runin_moment):
     while True:
       count += 1
       rand = randint(0, 5)
-      hit = (int(attacker['attack'])/int(defender['defense'])*rand)
-      attacker_health=(percentage(int(attacker['health']), 100))
-      defender_health=(percentage(int(defender['health']), 100))
+      hit = (int(attacker.attack)/int(defender.defense)*rand)
+      # attacker_health=(percentage(int(defender_health), 100))
+      # defender_health=(percentage(int(defender_health), 100))
 
       # use turn var to determine who's going to attack and who's going to defend (1 = attacker, 2 = defender) 
       turn_list = [1, 2, 'attk_come_back', 'def_come_back', 'finisher','omgmoment','run_in']
@@ -62,14 +64,14 @@ def booker(participants,bonuses,omgmoment,runin_moment):
         who=random.sample([defender, attacker], 2)
         print(who)
         damage = (10*random.randint(1, 10))
-        if 'defender' in who[1]['role']:
-            defender['health'] = int(defender['health']) - damage
+        if 'defender' in who[1].match_role:
+            defender_health = int(defender_health) - damage
         else:
-            attacker['health'] = int(attacker['health']) - damage
+            defender_health = int(defender_health) - damage
         # else:
         #   damage = 0
         # outcome=f"&#129324; WTF JUST HAPPENED OMFG {moment} &#129324;" 
-        outcome=f"&#129324; WTF JUST HAPPENED! {str(who[0]['name'])} hits {str(who[1]['name'])} with a {moment} &#129324; [-{damage}!]"
+        outcome=f"&#129324; WTF JUST HAPPENED! {str(who[0].name)} hits {str(who[1].name)} with a {moment} &#129324; [-{damage}!]"
         roundup.append(outcome)
 
       if 'run_in' in turn:
@@ -79,25 +81,25 @@ def booker(participants,bonuses,omgmoment,runin_moment):
 
       if 1 in turn:
         move = random.choice(move_list)
-        outcome=f"{str(defender_key)} [{str(defender_health)}] is hit with a {move} [{str(hit)}] by  {str(attacker_key)} [{str(attacker_health)}]"
-        defender['health'] = int(defender['health']) - hit
+        outcome=f"{str(defender_key)} [{str(defender_health)}] is hit with a {move} [{str(hit)}] by  {str(attacker_key)} [{str(defender_health)}]"
+        defender_health = int(defender_health) - hit
         roundup.append(outcome)
         # print(roundup)
 
       elif 2 in turn:
         move = random.choice(move_list)
-        attacker['health'] = int(attacker['health']) - hit
-        outcome=f"{str(attacker_key)} [{str(attacker_health)}] is hit with a {move} [{str(hit)}] by  {str(defender_key)} [{str(defender_health)}]"
+        defender_health = int(defender_health) - hit
+        outcome=f"{str(attacker_key)} [{str(defender_health)}] is hit with a {move} [{str(hit)}] by  {str(defender_key)} [{str(defender_health)}]"
         roundup.append(outcome)
         # print(roundup)
 
       elif "attk_come_back" in turn:
-        attacker['health'] = int(attacker['health']) + comeback_plus
+        attacker_health = int(attacker_health) + comeback_plus
         outcome=f"{str(attacker_key)} [{str(attacker_health)}] starts rallying the crowd behind them &#128293; [+{str(comeback_plus)}!]"
         roundup.append(outcome)
 
       elif "def_come_back" in turn:
-        defender['health'] = int(defender['health']) + comeback_plus
+        defender_health = int(defender_health) + comeback_plus
         outcome=f"{str(defender_key)} [{str(defender_health)}] starts rallying the crowd behind them &#128293; [+{str(comeback_plus)}!]"
         roundup.append(outcome)
 
@@ -108,23 +110,23 @@ def booker(participants,bonuses,omgmoment,runin_moment):
         if 'success' in success:
           damage = (10*random.randint(1, 10))
           finisher_count = finisher_count + 1
-          if 'defender' in who[1]['role']:
-            defender['health'] = int(defender['health']) - damage
+          if 'defender' in who[1].match_role:
+            defender_health = int(defender_health) - damage
           else:
-            attacker['health'] = int(attacker['health']) - damage
+            attacker_health = int(attacker_health) - damage
         else:
           damage = 0
         
-        outcome=f"{str(who[0]['name'])} attempts their finisher {who[0]['finisher']} on {str(who[1]['name'])} it was a {success} &#128079; [-{damage}!]"
+        outcome=f"{str(who[0].name)} attempts their finisher {who[0].finisher} on {str(who[1].name)} it was a {success} &#128079; [-{damage}!]"
         roundup.append(outcome)
 
       # Declare the winner! 
-      if int(defender['health']) <= 0:
+      if int(defender_health) <= 0:
         result = f"{str(attacker_key)} defeats {str(defender_key)}"
         winner = f"{str(attacker_key)}"
         loser = f"{str(defender_key)}"
         # Work out rating based on number of stages and how random choices
-        rating = int(count)/10+int(attacker['level'])+int(defender['level'])+int(defender['attack'])+int(attacker['attack'])+bonuses
+        rating = int(count)/10+int(attacker.level)+int(defender.level)+int(defender.attack)+int(attacker.attack)+bonuses
         if rating < 20:
             stars=1
         elif (rating >= 20 and rating < 40):
@@ -140,12 +142,12 @@ def booker(participants,bonuses,omgmoment,runin_moment):
         print(rating)
         return(match,roundup,result,winner,loser,stars)
         # break
-      elif int(attacker['health']) <= 0:
+      elif int(attacker_health) <= 0:
         result = f"{str(defender_key)} defeats {str(attacker_key)}"
         winner = f"{str(defender_key)}"
         loser = f"{str(attacker_key)}"
         # Work out rating based on number of stages and how random choices
-        rating = int(count)/10+int(attacker['level'])+int(defender['level'])+int(defender['attack'])+int(attacker['attack'])+bonuses
+        rating = int(count)/10+int(attacker.level)+int(defender.level)+int(defender.attack)+int(attacker.attack)+bonuses
         if rating < 20:
             stars=1
         elif (rating >= 20 and rating < 40):

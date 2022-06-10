@@ -1,9 +1,10 @@
 ###############################################
 #          Import some packages               #
 ###############################################
-from flask import Flask, jsonify
+from flask import Flask
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 
 ###############################################
 #          Module Level Variables             #
@@ -18,6 +19,17 @@ app = Flask(__name__)
 # Set up the SQLAlchemy Database to be a local file 'new_database.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///new_database.db'
 db = SQLAlchemy(app)
+
+login_manager = LoginManager()
+login_manager.login_view = 'auth_assets.login'
+login_manager.init_app(app)
+
+from models import User
+
+@login_manager.user_loader
+def load_user(user_id):
+    # since the user_id is just the primary key of our user table, use it in the query for the user
+    return User.query.get(int(user_id))
 
 ###############################################
 #          Import blueprints                  #
@@ -42,6 +54,9 @@ from application.titles import titles_blueprint
 app.register_blueprint(titles_blueprint)
 from application.home import home_blueprint
 app.register_blueprint(home_blueprint)
+# blueprint for auth routes in our app
+from application.auth import auth_blueprint
+app.register_blueprint(auth_blueprint)
 
 app.secret_key = "abc"  
 

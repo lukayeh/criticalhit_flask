@@ -9,90 +9,22 @@
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
+    <link rel="stylesheet" href="../static/css/markdown.css">
     {{ bootstrap.load_css() }}
-    <style>
-        pre {
-            background: rgb(60, 60, 60);
-            padding: 10px;
-        }
 
-        /* hr {
-            height: 1px;
-            background-color: #d8d8d8;
-            border: none;
-            width: 100%;
-            margin: 0px;
-        } */ */
-
-        
-        h2 {
-            margin-top: 20px;
-        }
-        
-        footer {
-            margin: 20px;
-        }
-        
-        .container .content {
-        display: none;
-        padding : 5px;
-        }
-
-        img.rounded {
-        object-fit: cover;
-        border-radius: 50%;
-        height: 100px;
-        width: 100px;
-        }
-
-        .myimg{
-        width:100px;
-        height:100px;
-        object-fit:cover;
-        border-radius:50%;
-        }
-
-        form {
-        display: inline;
-        }
-
-        .myimg_member{
-        width:300px;
-        height:300px;
-        object-fit:cover;
-        border-radius:50%;
-        }
-
-        .myimg_roster{
-        width:20px;
-        height:20px;
-        object-fit:cover;
-        border-radius:50%;
-        }
-
-        .rcorners1 {
-        border-radius: 15px;
-        padding: 10px; 
-        /* width: 200px;
-        height: 150px;  */
-        }
-
-    </style>
 </head>
 <body>
     <!----------------------------------------------------------------->
     <!------------------      Nav bar start  -------------------------->
     <!----------------------------------------------------------------->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+        <a class="navbar-brand" href="#">Critical Hit</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {{ render_nav_item('home_assets.home', 'Home', use_li=True) }}
                 {{ render_nav_item('roster_assets.roster', 'Roster', use_li=True) }}
                 <li class="nav-item dropdown">
@@ -113,17 +45,31 @@
                     </ul>
                 </li>
                 {{ render_nav_item('companies_assets.companies', 'Companies', use_li=True) }}
-
             </ul>
-        </div>
-
+            <span class="navbar-text">Welcome {{current_user.name}} || </span>
+            <span class="navbar-text">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% if current_user.is_authenticated %}
+                        {{ render_nav_item('home_assets.profile', 'Profile', use_li=True) }}
+                    {% endif %}
+                    {% if not current_user.is_authenticated %}
+                        {{ render_nav_item('auth_assets.login', 'Login', use_li=True) }}
+                        {{ render_nav_item('auth_assets.signup', 'Sign Up', use_li=True) }}
+                    {% endif %}
+                    {% if current_user.is_authenticated %}
+                        {{ render_nav_item('auth_assets.logout', 'Logout', use_li=True) }}
+                    {% endif %}
+                </ul>
+            </span>
+        </div>    
         </div>
     </nav>
     <!----------------------------------------------------------------->
     <!------------------      Nav bar end  -------------------------->
     <!----------------------------------------------------------------->
-    
+
     <main class="container">
+        <br>
         {{ render_messages(container=False, dismissible=True) }}
         {% block content %}{% endblock %}
     </main>

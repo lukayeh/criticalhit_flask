@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>&#127968; Welcome: </h3>
+
+<hr>
+
+<div class="bg-white border rcorners1">
+    <section class="w-100 p-4">
+    <h3 class="title">Login</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="/login">
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+              <input type="email" id="email" name="email" class="form-control" />
+              <label class="form-label" for="email">Email address</label>
+            </div>
+          
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+              <input type="password" type="password" name="password" class="form-control" />
+              <label class="form-label" type="password" name="password">Password</label>
+            </div>
+          
+            <!-- 2 column grid layout for inline styling -->
+            <div class="row mb-4">
+              <div class="col d-flex justify-content-center">
+                <!-- Checkbox -->
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="remember" name="remember" checked />
+                  <label class="form-check-label" for="form2Example31"> Remember me </label>
+                </div>
+              </div>
+            </div>
+          
+            <!-- Submit button -->
+            <button class="button btn btn-primary btn-block mb-4">Login</button>
+          
+            <!-- Register buttons -->
+            <div class="text-center">
+              <p>Not a member? <a href="{{ url_for('auth_assets.signup') }}">Register</a></p>          
+            </div>
+          </form>
+    </div>
+</div>
+</div>
+</section>
+{% endblock %}

@@ -1,12 +1,11 @@
 # app/booker/routes.py
 # this is where you can put all your booker routes
-from flask import Blueprint
-from flask import Flask, render_template, request, redirect, flash, url_for
-import sqlite3
+from flask import render_template, request, redirect, flash, url_for
 import post_runner # importing the runner
 from application.show_booker import show_booker_blueprint
 from flask import render_template
 import utils # import utils!
+from models import * 
 
 ###############################################
 #          Module Level Variables             #
@@ -14,14 +13,28 @@ import utils # import utils!
 my_company=2
 
 ###############################################
+#          Login required                     #
+###############################################
+from flask_login import login_required, current_user
+
+@show_booker_blueprint.before_request
+@login_required
+def before_request():
+    """ Protect all of the admin endpoints. """
+    pass 
+
+###############################################
 #          Render Show Booker page            #
 ###############################################
 @show_booker_blueprint.route('/show_booker')
 def show_booker():
-	conn = utils.get_db_connection()
-	roster = conn.execute("SELECT * FROM roster WHERE role = ? AND active = ? AND association LIKE '%'||?||'%'", ['wrestler','active',my_company]).fetchall()
-	conn.close()
-	return render_template('show_booker.html', title='Booker', roster=roster)
+    company = "%{}%".format(my_company)
+    roster = Roster.query.filter(
+                    Roster.association.like(company),
+                    Roster.active=='active',
+                    Roster.role=='wrestler').all()
+    # titles = Titles.query.all()
+    return render_template('show_booker.html', title='Booker', roster=roster)
 
 ###############################################
 #          Render show_post page              #
@@ -34,9 +47,7 @@ def show_post():
         show[f'segment_{x}'] = {}
         show[f'segment_{x}']['participant_1'] = f"{request.args[f'0{x}_participant1']}"
         show[f'segment_{x}']['participant_2'] = f"{request.args[f'0{x}_participant2']}"
-    conn = utils.get_db_connection()
-    roster = conn.execute('SELECT * FROM roster').fetchall()
-    conn.close()
+    roster = Roster.query.all()
     myResults = []
 
     for x in show.items():

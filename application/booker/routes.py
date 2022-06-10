@@ -1,12 +1,12 @@
 # app/booker/routes.py
 # this is where you can put all your booker routes
-from flask import Blueprint
-from flask import Flask, render_template, request, redirect, flash, url_for
-import sqlite3
+from flask import render_template, request, redirect, flash, url_for
 import post_runner # importing the runner
 from application.booker import booker_blueprint
 from flask import render_template
 import utils # import utils!
+from models import *
+from sqlalchemy import or_, and_
 
 ###############################################
 #          Module Level Variables             #
@@ -23,16 +23,29 @@ def dict_factory(cursor, row):
     return d
 
 ###############################################
+#          Login required                     #
+###############################################
+from flask_login import login_required, current_user
+
+@booker_blueprint.before_request
+@login_required
+def before_request():
+    """ Protect all of the admin endpoints. """
+    pass 
+
+###############################################
 #          Render Booker page                 #
 ###############################################
 @booker_blueprint.route('/booker')
 def booker():
-	conn = utils.get_db_connection()
-	roster = conn.execute("SELECT * FROM roster WHERE role = ? AND active = ? AND association LIKE '%'||?||'%'", ['wrestler','active',my_company]).fetchall()
-	titles = conn.execute("SELECT * FROM titles").fetchall()
-
-	conn.close()
-	return render_template('booker.html', title='Booker', roster=roster, titles=titles)
+    
+    company = "%{}%".format(my_company)
+    roster = Roster.query.filter(
+                    Roster.association.like(company),
+                    Roster.active=='active',
+                    Roster.role=='wrestler').all()
+    titles = Titles.query.all()
+    return render_template('booker.html', title='Booker', roster=roster, titles=titles)
 
 ###############################################
 #          Render booker_post page            #
@@ -40,19 +53,17 @@ def booker():
 @booker_blueprint.route('/booker_post', methods=['POST'])
 def booker_post():
     conn = utils.get_db_connection()
-    print("PRINT REQUEST FORM!!!!!")
-    print(request.form)
-    print(request)
 
-    participants_sql = conn.execute('SELECT * FROM roster WHERE id = ? OR id = ?', (request.form['participant1'],request.form['participant2'])).fetchall()
+    participants_sql = Roster.query.filter(or_(
+                                    Roster.id == request.form['participant1'],
+                                    Roster.id == request.form['participant2'])).all()
+
     ## Update rating if they're in a fued!
-    fueds = conn.execute('SELECT * FROM fueds WHERE (participant_1 = :participant_1 AND participant_2 = :participant_2) OR (participant_2 = :participant_1 AND participant_1 = :participant_2)', 
-            {"participant_1": request.form['participant1'], "participant_2": request.form['participant2']})
-    fueds = fueds.fetchall()
+    fueds = Fueds.query.filter(or_((and_(Fueds.participant_1==request.form['participant1'],Fueds.participant_2==request.form['participant2'])), \
+              (and_(Fueds.participant_1==request.form['participant2'],Fueds.participant_2==request.form['participant1'])))).all()
 
     ## Grab titles
-    titles = conn.execute('SELECT * FROM titles').fetchall()
-    # titles = titles.
+    titles = Titles.query.all()
 
     # set bonus to 0
     bonus = 0
@@ -113,22 +124,30 @@ def booker_post():
     booker = post_runner.booker(participants=participants_sql,bonuses=bonus,omgmoment=omgmoment,runin_moment=runin_moment)
     booker_string = ','.join(map(str, booker[1]))
     
-    conn.execute("INSERT INTO result (result, rating, description) VALUES (?, ?, ?)", [booker[2], booker[5], booker_string])
-	# Update the loser
-    conn.execute("UPDATE roster SET health = health - 5 WHERE name = ?", [booker[4]])
-    conn.execute("UPDATE roster SET losses = losses + 1 WHERE name = ?", [booker[4]])
-	# Update the winner
-    conn.execute("UPDATE roster SET level = level + 1 WHERE name = ?", [booker[3]])
-    conn.execute("UPDATE roster SET wins = wins + 1 WHERE name = ?", [booker[3]])
-    # Update Winner titles
+    # conn.execute("INSERT INTO result (result, rating, description) VALUES (?, ?, ?)", [booker[2], booker[5], booker_string])
+    
+    # Add to the result table
+    new_result = Result(
+            result = booker[2],
+            rating = booker[5],
+            description = booker_string)
+    db.session.add(new_result)
+    # Update the loser
+    update_loser = Roster.query.filter_by(name=booker[4]).first()
+    update_loser.health = (update_loser.health) - 5
+    update_loser.losses = update_loser.losses + 1
+    # Update the winner
+    update_winner = Roster.query.filter_by(name=booker[3]).first()
+    update_winner.level = update_winner.level + 1
+    update_winner.wins = update_winner.wins + 1
+    
+    # Update titles
     if 'titlematch' in request.form or 'titlematch_2' in request.form:
-        conn.execute("UPDATE roster SET accolade = ? WHERE name = ?", [joinedTitles,booker[3]])
-        conn.execute("UPDATE roster SET accolade = ? WHERE name = ?", ['none',booker[4]])
-    # conn.execute('UPDATE roster SET accolade = TRIM(BOTH "," FROM REPLACE(REPLACE(accolade, ?, ''), ",,", ",")) WHERE name=?;', [myTitles[0],booker[4]])
+        update_loser.accolade = 'none'
+        update_winner.accolade = joinedTitles
+    
+    db.session.commit()
 
-
-    conn.commit()
-    conn.close()
     if fued_bonus == 'true':
         flash(f"Fued bonus added +10!") 
     return render_template('booker_post.html', 

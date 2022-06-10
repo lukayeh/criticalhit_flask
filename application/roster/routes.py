@@ -1,16 +1,27 @@
 # app/booker/routes.py
 # this is where you can put all your booker routes
-from flask import Flask, render_template, request, redirect, flash, url_for
+from flask import render_template, request, redirect, flash, url_for
 from application.roster import roster_blueprint
 from flask import render_template
-import utils # import utils!
-from app import app
-from models import Roster, Titles
+from models import *
 
 ###############################################
 #          Module Level Variables             #
 ###############################################
 my_company=2
+
+
+###############################################
+#          Login required                     #
+###############################################
+from flask_login import login_required, current_user
+
+@roster_blueprint.before_request
+@login_required
+def before_request():
+    """ Protect all of the admin endpoints. """
+    pass 
+
 
 ###############################################
 #          Render roster page                 #

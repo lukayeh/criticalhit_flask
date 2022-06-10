@@ -23,6 +23,23 @@ with open('../static/csv/titles.csv','rt') as fin: # `with` statement available 
 
 cur.executemany("INSERT INTO titles (name,type,association,img) VALUES (?, ?, ?, ?);", to_db)
 
+# Import fueds
+with open('../static/csv/fueds.csv','rt') as fin: # `with` statement available in 2.5+
+    # csv.DictReader uses first line in file for column headings by default
+    dr = csv.DictReader(fin) # comma is default delimiter
+    to_db = [(i['participant_1'],i['participant_2'],i['popularity'],i['status'],i['company']) for i in dr]
+
+cur.executemany("INSERT INTO fueds (participant_1,participant_2,popularity,status,company) VALUES (?, ?, ?, ?, ?);", to_db)
+
+# Import Companies
+with open('../static/csv/companies.csv','rt') as fin: # `with` statement available in 2.5+
+    # csv.DictReader uses first line in file for column headings by default
+    dr = csv.DictReader(fin) # comma is default delimiter
+    to_db = [(i['name'],i['img']) for i in dr]
+
+cur.executemany("INSERT INTO companies (name,img) VALUES (?, ?);", to_db)
+
+
 
 connection.commit()
 connection.close()

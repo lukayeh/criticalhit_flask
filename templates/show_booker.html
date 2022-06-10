@@ -8,23 +8,68 @@
 <hr>
 
 <form action="show_post">
+
+<div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 0"></button>
     {% for x in range(1, 5) %}
-    <h4>Segment {{x}}</h4>    
-    <select id="select_guy" name="0{{x}}_participant1">
-        <option value="" selected="selected">Choose your first competitor...</option>
-        {% for members in roster %}
-        <option value="{{members['id']}}">{{members['name']}} (lvl: {{members["level"]}})</option>"
-        {% endfor %}
-    </select>
-    <b> vs </b>
-    <select id="select_guy_2" name="0{{x}}_participant2">
-        <option value="" selected="selected">Choose your second competitor...</option>
-        {% for members in roster %}
-        <option value="{{members['id']}}">{{members['name']}} (lvl: {{members["level"]}})</option>"
-        {% endfor %}
-    </select>
-    <br><br>    
+      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="{{x}}" aria-label="Slide {{x}}"></button>
+      <!-- <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button> -->
     {% endfor %}
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="bg-white border rcorners1">
+                <section class="w-100 p-4">
+                    <center>TESTING</center>
+                </section>
+            </div>
+        </div>
+
+
+        {% for x in range(1, 5) %}
+        <div class="carousel-item">
+            <div class="bg-white border rcorners1">
+                <section class="w-100 p-4">
+                    <center>
+                        <h4>Segment {{x}}</h4>    
+                        <select id="select_guy" name="0{{x}}_participant1">
+                            <option value="" selected="selected">Choose your first competitor...</option>
+                            {% for members in roster %}
+                            <option value="{{members['id']}}">{{members['name']}} (lvl: {{members["level"]}})</option>"
+                            {% endfor %}
+                        </select>
+                        <b> vs </b>
+                        <select id="select_guy_2" name="0{{x}}_participant2">
+                            <option value="" selected="selected">Choose your second competitor...</option>
+                            {% for members in roster %}
+                            <option value="{{members['id']}}">{{members['name']}} (lvl: {{members["level"]}})</option>"
+                            {% endfor %}
+                        </select>
+                    </center>
+                </section>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+    
+
+    
+  </div>
+
+  
+
+
+
     <hr>
     <input type="submit" value="Submit">
     <hr>

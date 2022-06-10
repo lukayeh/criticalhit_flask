@@ -8,6 +8,7 @@
     <table id="roster-table" class="table table-striped">
       <thead>
         <tr>
+          <th></th>
           <th>Name</th>
           <th>Role</th>
           <th>Active</th>
@@ -23,6 +24,11 @@
         {% for members in roster %}
           <tr>
             <!-- name,real_name,role,association,accolade,active,attack,defense,health,level -->
+            <td>
+              <a href="{{ url_for('member_assets.member', member_id=members.id) }}">
+                <img id="playerOneImage" class="myimg_roster" src="{{members.img}}" alt="wrestlers logo">
+              </a>
+            </td>
             <td>
               <a href="{{ url_for('member_assets.member', member_id=members.id) }}">
                 {{ members.name }}

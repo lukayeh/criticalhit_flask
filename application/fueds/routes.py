@@ -1,11 +1,12 @@
 # app/booker/routes.py
 # this is where you can put all your booker routes
-from flask import Blueprint
-from flask import Flask, render_template, request, redirect, flash, url_for
-import sqlite3
+from re import DEBUG
+from flask import render_template, request, redirect, flash, url_for
 from application.fueds import fueds_blueprint
 from flask import render_template
-import utils # import utils!
+from models import *
+from sqlalchemy import or_, and_, insert
+from app import db
 
 ###############################################
 #          Module Level Variables             #
@@ -13,23 +14,35 @@ import utils # import utils!
 my_company=2
 
 ###############################################
+#          Login required                     #
+###############################################
+from flask_login import login_required, current_user
+
+@fueds_blueprint.before_request
+@login_required
+def before_request():
+    """ Protect all of the admin endpoints. """
+    pass 
+
+###############################################
 #          Render fued page                   #
 ###############################################
 
 @fueds_blueprint.route('/fueds')
 def fueds():
-    conn = utils.get_db_connection()
-    roster = conn.execute("SELECT * FROM roster").fetchall()
-    fueds = conn.execute("SELECT * FROM fueds WHERE company = ?", [my_company]).fetchall()
-    conn.close()
+    roster = Roster.query.filter(Roster.association.like(my_company)).all()
+    fueds = Fueds.query.filter(Fueds.company.like(my_company)).all()
+
     return render_template('fueds.html', title='Fueds', roster=roster, fueds=fueds)
 
 
 @fueds_blueprint.route('/create_fued/', methods=('GET', 'POST'))
 def create_fued():
-    conn = utils.get_db_connection()
-    roster = conn.execute("SELECT * FROM roster WHERE role = ? AND active = ? AND association LIKE '%'||?||'%'", ['wrestler','active',my_company]).fetchall()
-    conn.close()
+    company = "%{}%".format(my_company)
+    roster = Roster.query.filter(
+                Roster.association.like(company),
+                Roster.active=='active',
+                Roster.role=='wrestler').all()
 
     if request.method == 'POST':
         participant_1 = request.form['participant1']
@@ -40,11 +53,17 @@ def create_fued():
         elif not participant_2:
             flash('Content is required!')
         else:
-            conn = utils.get_db_connection()
-            conn.execute('INSERT INTO fueds (participant_1, participant_2, popularity, status, company) VALUES (?, ?, ?, ?, ?)',
-                            (participant_1, participant_2,0,"active",my_company))
-            conn.commit()
-            conn.close()
+            new_fued = Fueds(
+                        participant_1 = participant_1,
+                        participant_2 = participant_2,
+                        popularity = '0',
+                        status = 'active',
+                        company = my_company)
+
+            # add the new user to the database
+            db.session.add(new_fued)
+            db.session.commit()
+
             flash(f"you have successfuly created a fued")  
             return redirect(url_for('fueds_assets.fueds'))
     return render_template('fued_create.html',roster=roster)
@@ -57,11 +76,8 @@ def delete_fued():
         if not fued_to_delete:
             flash('fued_to_delete is required!')
         else:
-            conn = utils.get_db_connection()
-            conn.execute('UPDATE fueds SET status = ? WHERE id = (?)',
-                             ['ended',fued_to_delete])
-
-            conn.commit()
-            conn.close()
+            delete_fued = Fueds.query.filter_by(id=fued_to_delete).first()
+            delete_fued.status = 'ended'
+            db.session.commit()
             flash(f"you have successfuly ended the fued")  
             return redirect(url_for('fueds_assets.fueds'))
