@@ -1,7 +1,8 @@
 # app/booker/routes.py
 # this is where you can put all your booker routes
 from flask import render_template, request, redirect, flash, url_for
-import post_runner # importing the runner
+from application.booker import post_runner # importing the runner
+from application.booker import tagmatch # importing the runner
 from application.booker import booker_blueprint
 from flask import render_template
 import utils # import utils!
@@ -33,6 +34,46 @@ def before_request():
     """ Protect all of the admin endpoints. """
     pass 
 
+
+@booker_blueprint.route('/test')
+def test():
+    
+    team1_01 = 2
+    team1_02 = 3
+    team2_01 = 4
+    team2_02 = 5
+
+    tagteams = {}
+    tagteams[f'team_1'] = {}
+    tagteams[f'team_1']['member_1'] = {}
+    tagteams[f'team_1']['member_2'] = {}
+    tagteams[f'team_1']['member_1']['id'] = f"{team1_01}"
+    tagteams[f'team_1']['member_2']['id'] = f"{team1_02}"
+
+    tagteams[f'team_2'] = {}    
+    tagteams[f'team_2']['member_1'] = {}
+    tagteams[f'team_2']['member_2'] = {}
+    tagteams[f'team_2']['member_1']['id'] = f"{team2_01}"
+    tagteams[f'team_2']['member_2']['id'] = f"{team2_02}"
+
+    for t_id, t_info in tagteams.items():
+        print("Team:", t_id)
+    
+        for key in t_info:
+            print(t_info[key]['id'])
+            member= Roster.query.filter_by(id=t_info[key]['id']).first()
+            tagteams[t_id][key]['stats'] = member
+
+    booker = tagmatch.booker(participants=tagteams)
+    print(booker)
+
+    # print(tagteams)
+
+    return render_template('test.html', tag_teams=tagteams)
+
+
+
+
 ###############################################
 #          Render Booker page                 #
 ###############################################
@@ -52,8 +93,6 @@ def booker():
 ###############################################
 @booker_blueprint.route('/booker_post', methods=['POST'])
 def booker_post():
-    conn = utils.get_db_connection()
-
     participants_sql = Roster.query.filter(or_(
                                     Roster.id == request.form['participant1'],
                                     Roster.id == request.form['participant2'])).all()

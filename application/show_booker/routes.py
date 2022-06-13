@@ -1,7 +1,7 @@
 # app/booker/routes.py
 # this is where you can put all your booker routes
 from flask import render_template, request, redirect, flash, url_for
-import post_runner # importing the runner
+from application.booker import post_runner # importing the runner
 from application.show_booker import show_booker_blueprint
 from flask import render_template
 import utils # import utils!
