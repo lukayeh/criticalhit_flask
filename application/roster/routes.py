@@ -8,7 +8,7 @@ from models import *
 ###############################################
 #          Module Level Variables             #
 ###############################################
-my_company=2
+my_company = 2
 
 
 ###############################################
@@ -16,20 +16,21 @@ my_company=2
 ###############################################
 from flask_login import login_required, current_user
 
+
 @roster_blueprint.before_request
 @login_required
 def before_request():
-    """ Protect all of the admin endpoints. """
-    pass 
+    """Protect all of the admin endpoints."""
+    pass
 
 
 ###############################################
 #          Render roster page                 #
 ###############################################
-@roster_blueprint.route('/roster')
+@roster_blueprint.route("/roster")
 def roster():
     search = "%{}%".format(my_company)
     roster = Roster.query.filter(Roster.association.like(search)).all()
 
     titles = Titles.query.all()
-    return render_template('roster_test.html', roster=roster, titles=titles)
+    return render_template("roster_test.html", roster=roster, titles=titles)

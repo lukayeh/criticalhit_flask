@@ -11,19 +11,19 @@ def booker(participants):
     print("Running the tagmatch_runner")
     # print(participants)
     team_1 = []
-    team_1.append(participants['team_1']['member_1']['stats'].name)
-    team_1.append(participants['team_1']['member_2']['stats'].name)
+    team_1.append(participants["team_1"]["member_1"]["stats"].name)
+    team_1.append(participants["team_1"]["member_2"]["stats"].name)
     team_2 = []
-    team_2.append(participants['team_2']['member_1']['stats'].name)
-    team_2.append(participants['team_2']['member_2']['stats'].name)
+    team_2.append(participants["team_2"]["member_1"]["stats"].name)
+    team_2.append(participants["team_2"]["member_2"]["stats"].name)
     print("TEAM 1:")
     print(team_1)
     print("TEAM 2:")
-    print(team_2)   
+    print(team_2)
 
     roundup = []
     count = 0
-    
+
     while True:
         count += 1
         rand = randint(0, 5)
@@ -33,11 +33,11 @@ def booker(participants):
         print(f"attacker is: {defender}")
         # hit = (int(attacker.attack)/int(defender.defense)*rand)
 
-        # # use turn var to determine who's going to attack and who's going to defend (1 = attacker, 2 = defender) 
+        # # use turn var to determine who's going to attack and who's going to defend (1 = attacker, 2 = defender)
         # turn_list = [1, 2, 'attk_come_back', 'def_come_back', 'finisher']
-        
+
         # turn = random.choices(turn_list, weights=(50, 50, 5, 5, 10))
-        
+
         # # define some moves
         # move_list = ['suplex','dropkick','uppercut','punch','german suplex','piledriver','ddt','clothesline','back breaker']
 
@@ -87,11 +87,11 @@ def booker(participants):
     #   rand = randint(0, 5)
     #   hit = (int(attacker.attack)/int(defender.defense)*rand)
 
-    #   # use turn var to determine who's going to attack and who's going to defend (1 = attacker, 2 = defender) 
+    #   # use turn var to determine who's going to attack and who's going to defend (1 = attacker, 2 = defender)
     #   turn_list = [1, 2, 'attk_come_back', 'def_come_back', 'finisher']
-      
+
     #   turn = random.choices(turn_list, weights=(50, 50, 5, 5, 10))
-      
+
     #   # define some moves
     #   move_list = ['suplex','dropkick','uppercut','punch','german suplex','piledriver','ddt','clothesline','back breaker']
 
@@ -133,11 +133,11 @@ def booker(participants):
     #         attacker_health = int(attacker_health) - damage
     #     else:
     #       damage = 0
-        
+
     #     outcome=f"{str(who[0].name)} attempts their finisher {who[0].finisher} on {str(who[1].name)} it was a {success} &#128079; [-{damage}!]"
     #     roundup.append(outcome)
 
-    #   # Declare the winner! 
+    #   # Declare the winner!
     #   if int(defender_health) <= 0:
     #     result = f"{str(attacker_key)} defeats {str(defender_key)}"
     #     winner = f"{str(attacker_key)}"
@@ -154,7 +154,7 @@ def booker(participants):
     #         stars=4
     #     elif (rating >= 80):
     #         stars=5
-    #     else: 
+    #     else:
     #         stars=0
     #     print(rating)
     #     return(match,roundup,result,winner,loser,stars)
@@ -175,13 +175,12 @@ def booker(participants):
     #         stars=4
     #     elif (rating >= 80):
     #         stars=5
-    #     else: 
+    #     else:
     #         stars=0
     #     print(rating)
-        # return(match,roundup,result,winner,loser,stars)
-    return(participants)
-        # break
-
+    # return(match,roundup,result,winner,loser,stars)
+    return participants
+    # break
 
     # {% if (booker[5]|int < 20) %}
     # &#11088;
@@ -196,9 +195,4 @@ def booker(participants):
     # {% else %}
     # no star
     # {% endif %}
-      #return(match,roundup,result,winner,loser)
-      
-  
-
-
-
+    # return(match,roundup,result,winner,loser)

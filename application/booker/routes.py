@@ -1,18 +1,18 @@
 # app/booker/routes.py
 # this is where you can put all your booker routes
 from flask import render_template, request, redirect, flash, url_for
-from application.booker import post_runner # importing the runner
-from application.booker import tagmatch # importing the runner
+from application.booker import post_runner  # importing the runner
+from application.booker import tagmatch  # importing the runner
 from application.booker import booker_blueprint
 from flask import render_template
-import utils # import utils!
+import utils  # import utils!
 from models import *
 from sqlalchemy import or_, and_
 
 ###############################################
 #          Module Level Variables             #
 ###############################################
-my_company=2
+my_company = 2
 
 ###############################################
 #          Define dict factory                #
@@ -23,153 +23,174 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
+
 ###############################################
 #          Login required                     #
 ###############################################
 from flask_login import login_required, current_user
 
+
 @booker_blueprint.before_request
 @login_required
 def before_request():
-    """ Protect all of the admin endpoints. """
-    pass 
+    """Protect all of the admin endpoints."""
+    pass
 
 
-@booker_blueprint.route('/test')
+@booker_blueprint.route("/test")
 def test():
-    
+
     team1_01 = 2
     team1_02 = 3
     team2_01 = 4
     team2_02 = 5
 
     tagteams = {}
-    tagteams[f'team_1'] = {}
-    tagteams[f'team_1']['member_1'] = {}
-    tagteams[f'team_1']['member_2'] = {}
-    tagteams[f'team_1']['member_1']['id'] = f"{team1_01}"
-    tagteams[f'team_1']['member_2']['id'] = f"{team1_02}"
+    tagteams[f"team_1"] = {}
+    tagteams[f"team_1"]["member_1"] = {}
+    tagteams[f"team_1"]["member_2"] = {}
+    tagteams[f"team_1"]["member_1"]["id"] = f"{team1_01}"
+    tagteams[f"team_1"]["member_2"]["id"] = f"{team1_02}"
 
-    tagteams[f'team_2'] = {}    
-    tagteams[f'team_2']['member_1'] = {}
-    tagteams[f'team_2']['member_2'] = {}
-    tagteams[f'team_2']['member_1']['id'] = f"{team2_01}"
-    tagteams[f'team_2']['member_2']['id'] = f"{team2_02}"
+    tagteams[f"team_2"] = {}
+    tagteams[f"team_2"]["member_1"] = {}
+    tagteams[f"team_2"]["member_2"] = {}
+    tagteams[f"team_2"]["member_1"]["id"] = f"{team2_01}"
+    tagteams[f"team_2"]["member_2"]["id"] = f"{team2_02}"
 
     for t_id, t_info in tagteams.items():
         print("Team:", t_id)
-    
+
         for key in t_info:
-            print(t_info[key]['id'])
-            member= Roster.query.filter_by(id=t_info[key]['id']).first()
-            tagteams[t_id][key]['stats'] = member
+            print(t_info[key]["id"])
+            member = Roster.query.filter_by(id=t_info[key]["id"]).first()
+            tagteams[t_id][key]["stats"] = member
 
     booker = tagmatch.booker(participants=tagteams)
     print(booker)
 
     # print(tagteams)
 
-    return render_template('test.html', tag_teams=tagteams)
-
-
+    return render_template("test.html", tag_teams=tagteams)
 
 
 ###############################################
 #          Render Booker page                 #
 ###############################################
-@booker_blueprint.route('/booker')
+@booker_blueprint.route("/booker")
 def booker():
-    
+
     company = "%{}%".format(my_company)
     roster = Roster.query.filter(
-                    Roster.association.like(company),
-                    Roster.active=='active',
-                    Roster.role=='wrestler').all()
+        Roster.association.like(company),
+        Roster.active == "active",
+        Roster.role == "wrestler",
+    ).all()
     titles = Titles.query.all()
-    return render_template('booker.html', title='Booker', roster=roster, titles=titles)
+    return render_template("booker.html", title="Booker", roster=roster, titles=titles)
+
 
 ###############################################
 #          Render booker_post page            #
 ###############################################
-@booker_blueprint.route('/booker_post', methods=['POST'])
+@booker_blueprint.route("/booker_post", methods=["POST"])
 def booker_post():
-    participants_sql = Roster.query.filter(or_(
-                                    Roster.id == request.form['participant1'],
-                                    Roster.id == request.form['participant2'])).all()
+    participants_sql = Roster.query.filter(
+        or_(
+            Roster.id == request.form["participant1"],
+            Roster.id == request.form["participant2"],
+        )
+    ).all()
 
     ## Update rating if they're in a fued!
-    fueds = Fueds.query.filter(or_((and_(Fueds.participant_1==request.form['participant1'],Fueds.participant_2==request.form['participant2'])), \
-              (and_(Fueds.participant_1==request.form['participant2'],Fueds.participant_2==request.form['participant1'])))).all()
+    fueds = Fueds.query.filter(
+        or_(
+            (
+                and_(
+                    Fueds.participant_1 == request.form["participant1"],
+                    Fueds.participant_2 == request.form["participant2"],
+                )
+            ),
+            (
+                and_(
+                    Fueds.participant_1 == request.form["participant2"],
+                    Fueds.participant_2 == request.form["participant1"],
+                )
+            ),
+        )
+    ).all()
 
     ## Grab titles
     titles = Titles.query.all()
 
     # set bonus to 0
     bonus = 0
-    
+
     # Setup a titles list
     myTitles = []
-    
+
     # Check for titles
-    if 'titlematch' in request.form or 'titlematch_2' in request.form:
+    if "titlematch" in request.form or "titlematch_2" in request.form:
         print(f"titlematch set")
 
         # Append first title
         if "titlematch" in request.form:
             # Append first title
-            myTitles.append(request.form['titlematch'])
-        
+            myTitles.append(request.form["titlematch"])
+
         # Append second title
         if "titlematch_2" in request.form:
             # Append second title
-            myTitles.append(request.form['titlematch_2'])
-        
+            myTitles.append(request.form["titlematch_2"])
+
         # print(myTitles)
         joinedTitles = ",".join(myTitles)
         # print(joinedTitles)
-        bonus = bonus +5
-        flash(f"Title bonus added +5!") 
+        bonus = bonus + 5
+        flash(f"Title bonus added +5!")
     else:
         print(f"titlematch NOT set")
-        titlematch='false'
-    
+        titlematch = "false"
+
     # Check for omg moment
-    if 'omgmoment' in request.form:
+    if "omgmoment" in request.form:
         print(f"OMG moment set")
-        omgmoment='true'
-        bonus = bonus +5
+        omgmoment = "true"
+        bonus = bonus + 5
     else:
         print(f"OMG moment NOT set")
-        omgmoment='false'
+        omgmoment = "false"
 
     # Check for run in moment
-    if 'run_in' in request.form:
+    if "run_in" in request.form:
         print(f"Random run_in moment set")
-        runin_moment='true'
-        bonus = bonus +5
+        runin_moment = "true"
+        bonus = bonus + 5
     else:
         print(f"Random run_in moment NOT set")
-        runin_moment='false'
+        runin_moment = "false"
 
     # Check if the participants are in a fued if so give extra points!
     if fueds:
         print(f"They are in a fued together")
-        bonus = bonus +10
-        fued_bonus='true'
+        bonus = bonus + 10
+        fued_bonus = "true"
     else:
-        fued_bonus='false'
+        fued_bonus = "false"
         print(f"No fued found")
-    
-    booker = post_runner.booker(participants=participants_sql,bonuses=bonus,omgmoment=omgmoment,runin_moment=runin_moment)
-    booker_string = ','.join(map(str, booker[1]))
-    
+
+    booker = post_runner.booker(
+        participants=participants_sql,
+        bonuses=bonus,
+        omgmoment=omgmoment,
+        runin_moment=runin_moment,
+    )
+    booker_string = ",".join(map(str, booker[1]))
+
     # conn.execute("INSERT INTO result (result, rating, description) VALUES (?, ?, ?)", [booker[2], booker[5], booker_string])
-    
+
     # Add to the result table
-    new_result = Result(
-            result = booker[2],
-            rating = booker[5],
-            description = booker_string)
+    new_result = Result(result=booker[2], rating=booker[5], description=booker_string)
     db.session.add(new_result)
     # Update the loser
     update_loser = Roster.query.filter_by(name=booker[4]).first()
@@ -179,19 +200,21 @@ def booker_post():
     update_winner = Roster.query.filter_by(name=booker[3]).first()
     update_winner.level = update_winner.level + 1
     update_winner.wins = update_winner.wins + 1
-    
+
     # Update titles
-    if 'titlematch' in request.form or 'titlematch_2' in request.form:
-        update_loser.accolade = 'none'
+    if "titlematch" in request.form or "titlematch_2" in request.form:
+        update_loser.accolade = "none"
         update_winner.accolade = joinedTitles
-    
+
     db.session.commit()
 
-    if fued_bonus == 'true':
-        flash(f"Fued bonus added +10!") 
-    return render_template('booker_post.html', 
-            title='Booker',
-			booker=booker,
-            participants=participants_sql,
-            myTitles=myTitles,
-            titles=titles)
+    if fued_bonus == "true":
+        flash(f"Fued bonus added +10!")
+    return render_template(
+        "booker_post.html",
+        title="Booker",
+        booker=booker,
+        participants=participants_sql,
+        myTitles=myTitles,
+        titles=titles,
+    )
