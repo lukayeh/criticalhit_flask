@@ -33,4 +33,4 @@ def roster():
     roster = Roster.query.filter(Roster.association.like(search)).all()
 
     titles = Titles.query.all()
-    return render_template("roster_test.html", roster=roster, titles=titles)
+    return render_template("roster.html", roster=roster, titles=titles)

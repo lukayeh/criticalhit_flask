@@ -1,6 +1,6 @@
 import csv, sqlite3
 
-connection = sqlite3.connect("../new_database.db")
+connection = sqlite3.connect("../database.db")
 
 with open("schema_new.sql") as f:
     connection.executescript(f.read())
@@ -17,6 +17,7 @@ with open(
         (
             i["name"],
             i["real_name"],
+            i["age"],
             i["role"],
             i["association"],
             i["accolade"],
@@ -34,7 +35,7 @@ with open(
     ]
 
 cur.executemany(
-    "INSERT INTO roster (name, real_name, role, association, accolade, active, finisher, attack, defense, health, level, wins, losses, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+    "INSERT INTO roster (name, real_name, age, role, association, accolade, active, finisher, attack, defense, health, level, wins, losses, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
     to_db,
 )
 

@@ -17,7 +17,7 @@ my_company = 2
 app = Flask(__name__)
 
 # Set up the SQLAlchemy Database to be a local file 'new_database.db'
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///new_database.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 db = SQLAlchemy(app)
 
 login_manager = LoginManager()

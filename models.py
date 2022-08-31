@@ -13,6 +13,7 @@ class Roster(db.Model):
     created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     name = db.Column(db.String(100))
     real_name = db.Column(db.String(100))
+    age = db.Column(db.Integer)
     role = db.Column(db.String(100))
     association = db.Column(db.String(100))
     accolade = db.Column(db.String(100))

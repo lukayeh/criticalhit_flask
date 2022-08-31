@@ -12,7 +12,7 @@
           <th></th>
           <th>Name</th>
           <th>Role</th>
-          <!-- <th>Works For</th> -->
+          <th>Age</th>
           <th>Titles</th>
           <th>Active</th>
           <th>Atck</th>
@@ -38,17 +38,18 @@
               </a>
             </td>
             <td>{{ members.role }}</td>
+            <td>{{ members.age }}</td>
             <td>
             <!-- <td>{{ members.association }}</td> -->
-              {% if "none" in members.accolade %}
-                none
-              {% else %}
-                {% set list1 = members.accolade.split(',') %}
-                  {% for item in list1 %}
-                    {{ titles[item|int - 1]['name'] }}
-                    <p>
-                  {% endfor %} 
-              {% endif %}
+            {% if "none" in members.accolade %}
+              none
+            {% else %}
+              {% set list1 = members.accolade.split(',') %}
+                {% for item in list1 %}
+                  {{ titles[item|int - 1]['name'] }}
+                  <p>
+                {% endfor %} 
+            {% endif %}
             </td>
             <td>{{ members.active }}</td>
             <!-- <td>{{ members.attack }}</td> -->
