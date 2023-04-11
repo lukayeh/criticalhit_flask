@@ -190,7 +190,7 @@ def booker_post():
     # conn.execute("INSERT INTO result (result, rating, description) VALUES (?, ?, ?)", [booker[2], booker[5], booker_string])
 
     # Add to the result table
-    new_result = Result(result=booker[2], rating=booker[5], description=booker_string)
+    new_result = Result(result=booker[2], rating=booker[5], winner=booker[3], loser=booker[4], description=booker_string)
     db.session.add(new_result)
     # Update the loser
     update_loser = Roster.query.filter_by(name=booker[4]).first()

@@ -5,10 +5,6 @@ from colorama import Fore, Back, Style
 
 
 def booker(participants, bonuses, omgmoment, runin_moment):
-    # Percentage calculator
-    def percentage(part, whole):
-        percentage = 100 * float(part) / float(whole)
-        return str(percentage) + "%"
 
     print("Running the post_runner")
     print(f"BONUS IS {bonuses}")
@@ -49,8 +45,6 @@ def booker(participants, bonuses, omgmoment, runin_moment):
         count += 1
         rand = randint(0, 5)
         hit = int(attacker.attack) / int(defender.defense) * rand
-        # attacker_health=(percentage(int(defender_health), 100))
-        # defender_health=(percentage(int(defender_health), 100))
 
         # use turn var to determine who's going to attack and who's going to defend (1 = attacker, 2 = defender)
         turn_list = [
@@ -98,9 +92,6 @@ def booker(participants, bonuses, omgmoment, runin_moment):
                 defender_health = int(defender_health) - damage
             else:
                 attacker_health = int(attacker_health) - damage
-            # else:
-            #   damage = 0
-            # outcome=f"&#129324; WTF JUST HAPPENED OMFG {moment} &#129324;"
             outcome = f"&#129324; WTF JUST HAPPENED! {str(who[0].name)} hits {str(who[1].name)} with a {moment} &#129324; [-{damage}!]"
             roundup.append(outcome)
 
@@ -150,75 +141,42 @@ def booker(participants, bonuses, omgmoment, runin_moment):
             outcome = f"{str(who[0].name)} attempts their finisher {who[0].finisher} on {str(who[1].name)} it was a {success} &#128079; [-{damage}!]"
             roundup.append(outcome)
 
+
+        # Work out rating based on number of stages and how random choices
+        rating = (
+            int(count) / 10
+            + int(attacker.level)
+            + int(defender.level)
+            + int(defender.attack)
+            + int(attacker.attack)
+            + bonuses
+        )
+        if rating < 20:
+            stars = 1
+        elif rating >= 20 and rating < 40:
+            stars = 2
+        elif rating >= 40 and rating < 60:
+            stars = 3
+        elif rating >= 60 and rating < 80:
+            stars = 4
+        elif rating >= 80:
+            stars = 5
+        else:
+            stars = 0
+        print(rating)
+
         # Declare the winner!
         if int(defender_health) <= 0:
             result = f"{str(attacker_key)} defeats {str(defender_key)}"
             winner = f"{str(attacker_key)}"
             loser = f"{str(defender_key)}"
-            # Work out rating based on number of stages and how random choices
-            rating = (
-                int(count) / 10
-                + int(attacker.level)
-                + int(defender.level)
-                + int(defender.attack)
-                + int(attacker.attack)
-                + bonuses
-            )
-            if rating < 20:
-                stars = 1
-            elif rating >= 20 and rating < 40:
-                stars = 2
-            elif rating >= 40 and rating < 60:
-                stars = 3
-            elif rating >= 60 and rating < 80:
-                stars = 4
-            elif rating >= 80:
-                stars = 5
-            else:
-                stars = 0
-            print(rating)
+
             return (match, roundup, result, winner, loser, stars)
             # break
         elif int(attacker_health) <= 0:
             result = f"{str(defender_key)} defeats {str(attacker_key)}"
             winner = f"{str(defender_key)}"
             loser = f"{str(attacker_key)}"
-            # Work out rating based on number of stages and how random choices
-            rating = (
-                int(count) / 10
-                + int(attacker.level)
-                + int(defender.level)
-                + int(defender.attack)
-                + int(attacker.attack)
-                + bonuses
-            )
-            if rating < 20:
-                stars = 1
-            elif rating >= 20 and rating < 40:
-                stars = 2
-            elif rating >= 40 and rating < 60:
-                stars = 3
-            elif rating >= 60 and rating < 80:
-                stars = 4
-            elif rating >= 80:
-                stars = 5
-            else:
-                stars = 0
-            print(rating)
+
             return (match, roundup, result, winner, loser, stars)
             # break
-
-    # {% if (booker[5]|int < 20) %}
-    # &#11088;
-    # {% elif (booker[5]|int >= 20 and booker[5]|int < 40) %}
-    # &#11088; &#11088;
-    # {% elif (booker[5]|int >= 40 and booker[5]|int < 60) %}
-    # &#11088; &#11088; &#11088;
-    # {% elif (booker[5]|int >= 60 and booker[5]|int < 80) %}
-    # &#11088; &#11088; &#11088; &#11088;
-    # {% elif (booker[5]|int >= 80) %}
-    # &#11088; &#11088; &#11088; &#11088; &#11088;
-    # {% else %}
-    # no star
-    # {% endif %}
-    # return(match,roundup,result,winner,loser)

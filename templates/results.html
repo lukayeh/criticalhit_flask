@@ -13,6 +13,8 @@
             <tr>
               <th>Date</th>
               <th>Result</th>
+              <th>Winner</th>
+              <th>Loser</th>
               <th>Description</th>
               <th>Rating</th>
 
@@ -23,12 +25,13 @@
               <tr>
                 <td>{{ x.created }}</td>
                 <td>{{ x.result }}</td>
-                <!-- <td>{{ x.description }}</td> -->
+                <td>{{ x.winner }}</td>
+                <td>{{ x.loser }}</td>
                 <td>
                   {% set list1 = x.description.split(',') %}
                   {% for i in list1 %} 
                   {{i|safe}}<br>
-                  {% endfor %} -->
+                  {% endfor %} 
                 </td>
                 <td> 
                   {% for x in range(0, x.rating) %}
