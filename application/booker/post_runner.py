@@ -4,7 +4,7 @@ from unicodedata import name
 from colorama import Fore, Back, Style
 
 
-def booker(participants, bonuses, omgmoment, runin_moment):
+def booker(participants, bonuses, omgmoment, runin_moment, moves):
 
     print("Running the post_runner")
     print(f"BONUS IS {bonuses}")
@@ -61,20 +61,7 @@ def booker(participants, bonuses, omgmoment, runin_moment):
             turn_list,
             weights=(50, 50, 5, 5, 10, omgmoment_likelihood, run_in_likelihood),
         )
-
-        # define some moves
-        move_list = [
-            "suplex",
-            "dropkick",
-            "uppercut",
-            "punch",
-            "german suplex",
-            "piledriver",
-            "ddt",
-            "clothesline",
-            "back breaker",
-        ]
-
+        
         # start the turn based attack/defense system
         if "omgmoment" in turn:
             omg_list = [
@@ -101,14 +88,14 @@ def booker(participants, bonuses, omgmoment, runin_moment):
             run_in_likelihood = 0
 
         if 1 in turn:
-            move = random.choice(move_list)
+            move = random.choice(moves)
             outcome = f"{str(defender_key)} [{str(defender_health)}] is hit with a {move} [{str(hit)}] by  {str(attacker_key)} [{str(attacker_health)}]"
             defender_health = int(defender_health) - hit
             roundup.append(outcome)
             # print(roundup)
 
         elif 2 in turn:
-            move = random.choice(move_list)
+            move = random.choice(moves)
             outcome = f"{str(attacker_key)} [{str(attacker_health)}] is hit with a {move} [{str(hit)}] by  {str(defender_key)} [{str(defender_health)}]"
             attacker_health = int(attacker_health) - hit
             roundup.append(outcome)

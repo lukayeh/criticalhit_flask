@@ -4,3 +4,4 @@ DELETE FROM fueds;
 DELETE FROM result;
 DELETE FROM companies;
 DELETE FROM user;
+DELETE FROM moves;

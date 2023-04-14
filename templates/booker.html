@@ -21,10 +21,10 @@
                 <tr>
                         
                     <td>    
-                        <img id="playerOneImage" class="myimg" src="/static/images/vacant.png" alt="wrestlers logo" width="200px">
+                        <img id="playerOneImage" class="myimg" src="/static/images/vacant.png" onerror="this.src='/static/images/vacant.png'" alt="wrestlers logo" width="200px">
                     </td>
                     <td>    
-                        <img id="playerTwoImage" class="myimg" src="/static/images/vacant.png" alt="wrestlers logo" width="200px">
+                        <img id="playerTwoImage" class="myimg" src="/static/images/vacant.png" onerror="this.src='/static/images/vacant.png'" alt="wrestlers logo" width="200px">
                     </td>
                 </tr>
                 <tr>
@@ -175,22 +175,6 @@ $('.detailprodoption_2').change(function () {
         }
     });
 });
-
-
-
-// $('.detailprodoption').change(function () {
-//     var e = document.getElementById("participant1");
-//     var strUser = e.options[e.selectedIndex].getAttribute('data-title-var');
-//     console.log(strUser)
-//     var $div =  $("#title_1");
-//     if(strUser != "none")    {
-//         $div.show();
-//     }
-//     else
-//     {
-//         $div.hide();
-//     }
-// });
 
 </script>
 

@@ -20,6 +20,7 @@
           <th>W</th>
           <th>L</th>
           <th>Health</th>
+          <th>Morale</th>
           <th>Level</th>
         </tr>
       </thead>
@@ -29,7 +30,7 @@
             <!-- name,real_name,role,association,accolade,active,attack,defense,health,level -->
             <td>
               <a href="{{ url_for('member_assets.member', member_id=members.id) }}">
-                <img id="playerOneImage" class="myimg_roster" src="{{members.img}}" alt="wrestlers logo">
+                <img id="playerOneImage" class="myimg_roster" src="{{members.img}}" onerror="this.src='/static/images/vacant.png'" alt="wrestlers logo">
               </a>
             </td>
             <td>
@@ -73,6 +74,14 @@
                 <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width:{{(members.health | int) / 100 * 100 }}%" aria-valuenow="{{members.health}}" aria-valuemin="0" aria-valuemax="100">{{members.health}}</div>
               </div>
               </td>
+            <td>
+              {% if members.morale < 33 %}
+              &#128546;
+              {% elif members.morale > 33  %}
+              &#128522;
+              {% endif %}
+              {{members.morale}}
+            </td>
             <td>{{ members.level }}</td>
 
 

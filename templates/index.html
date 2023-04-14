@@ -38,7 +38,7 @@ Todays date: <code>{{date}}</code>
           </table>
       </div>
       <div class="col-md-6">    
-          <h4>&#128240; Top 5 Wrestlers: </h4>
+          <h4>&#129340; Top 5 Wrestlers: </h4>
           <hr>
           <table id="generic-table" class="table table-striped">
               <thead>
@@ -57,26 +57,46 @@ Todays date: <code>{{date}}</code>
               </tbody>
           </table>
       </div>
-      <!-- <div class="col-md-6">    
-          <h4>&#128240; Top 5 Wrestlers: </h4>
+      <div class="col-md-6">    
+          <h4>&#128077; Top 5 Winners: </h4>
           <hr>
           <table id="generic-table" class="table table-striped">
               <thead>
                 <tr>
                   <th>Name</th>
-                  <th>Level</th>
+                  <th>Wins</th>
                 </tr>
               </thead>
               <tbody>
-                {% for q in roster10 %}
+                {% for q in rosterWins %}
                   <tr>
                     <td>{{ q.name }}</td>
-                    <td>{{ q.level }}</td>
+                    <td>{{ q.wins }}</td>
                   </tr>
                 {% endfor %}
               </tbody>
           </table>
-      </div> -->
+      </div>
+      <div class="col-md-6">    
+        <h4>&#128078; Top 5 Losers: </h4>
+        <hr>
+        <table id="generic-table" class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Losses</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for q in rosterLosers %}
+                <tr>
+                  <td>{{ q.name }}</td>
+                  <td>{{ q.losses }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+    </div>
     </section>
   </div>
 

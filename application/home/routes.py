@@ -31,6 +31,8 @@ def before_request():
 def home():
 
     roster10 = Roster.query.order_by(Roster.level.desc()).limit(5).all()
+    rosterLosers = Roster.query.order_by(Roster.losses.desc()).limit(5).all()
+    rosterWins = Roster.query.order_by(Roster.wins.desc()).limit(5).all()
     results = Result.query.order_by(Result.rating.desc()).limit(5).all()
 
     return render_template(
@@ -38,6 +40,8 @@ def home():
         title="Home",
         result=results,
         roster10=roster10,
+        rosterLosers=rosterLosers,
+        rosterWins=rosterWins,
         name=current_user.name,
     )
 

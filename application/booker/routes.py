@@ -1,5 +1,6 @@
 # app/booker/routes.py
 # this is where you can put all your booker routes
+from distutils.file_util import move_file
 from flask import render_template, request, redirect, flash, url_for
 from application.booker import post_runner  # importing the runner
 from application.booker import tagmatch  # importing the runner
@@ -178,12 +179,19 @@ def booker_post():
     else:
         fued_bonus = "false"
         print(f"No fued found")
+    
+    #Retrieve moves list
+    moves=Moves.query.all()
+    moves_list=[]
+    for move in moves:
+        moves_list.append(move.name)
 
     booker = post_runner.booker(
         participants=participants_sql,
         bonuses=bonus,
         omgmoment=omgmoment,
         runin_moment=runin_moment,
+        moves=moves_list
     )
     booker_string = ",".join(map(str, booker[1]))
 
@@ -196,6 +204,7 @@ def booker_post():
     update_loser = Roster.query.filter_by(name=booker[4]).first()
     update_loser.health = (update_loser.health) - 5
     update_loser.losses = update_loser.losses + 1
+    update_loser.morale = update_loser.morale - 5
     # Update the winner
     update_winner = Roster.query.filter_by(name=booker[3]).first()
     update_winner.level = update_winner.level + 1

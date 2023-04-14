@@ -25,6 +25,7 @@ class Roster(db.Model):
     level = db.Column(db.Integer)
     wins = db.Column(db.Integer)
     losses = db.Column(db.Integer)
+    morale = db.Column(db.Integer)
     img = db.Column(db.String(1000))
 
     def __repr__(self):
@@ -80,6 +81,17 @@ class Companies(db.Model):
     def __repr__(self):
         return f"<Companies {self.name}>"
 
+class Moves(db.Model):
+    __table_args__ = {"extend_existing": True}
+    # See http://flask-sqlalchemy.pocoo.org/2.0/models/#simple-example
+    # for details on the column types.
+
+    # We always need an id
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+
+    def __repr__(self):
+        return f"<Moves {self.name}>"
 
 class Result(db.Model):
     __table_args__ = {"extend_existing": True}
