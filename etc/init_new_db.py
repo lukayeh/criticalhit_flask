@@ -8,9 +8,7 @@ with open("etc/schema_new.sql") as f:
 cur = connection.cursor()
 
 # Import Roster
-with open(
-    "static/csv/roster.csv", "rt"
-) as fin:  # `with` statement available in 2.5+
+with open("static/csv/roster.csv", "rt") as fin:  # `with` statement available in 2.5+
     # csv.DictReader uses first line in file for column headings by default
     dr = csv.DictReader(fin)  # comma is default delimiter
     to_db = [
@@ -41,9 +39,7 @@ cur.executemany(
 )
 
 # Import Titles
-with open(
-    "static/csv/titles.csv", "rt"
-) as fin:  # `with` statement available in 2.5+
+with open("static/csv/titles.csv", "rt") as fin:  # `with` statement available in 2.5+
     # csv.DictReader uses first line in file for column headings by default
     dr = csv.DictReader(fin)  # comma is default delimiter
     to_db = [(i["name"], i["type"], i["association"], i["img"]) for i in dr]
@@ -84,15 +80,12 @@ cur.executemany("INSERT INTO companies (name,img) VALUES (?, ?);", to_db)
 
 
 # Import Moves
-with open(
-    "static/csv/moves.csv", "rt"
-) as fin:  # `with` statement available in 2.5+
+with open("static/csv/moves.csv", "rt") as fin:  # `with` statement available in 2.5+
     # csv.DictReader uses first line in file for column headings by default
     dr = csv.DictReader(fin)  # comma is default delimiter
     to_db = [(i["name"],) for i in dr]
 
 cur.executemany("INSERT INTO moves (name) VALUES (?);", to_db)
-
 
 
 connection.commit()

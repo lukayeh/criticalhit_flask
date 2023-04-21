@@ -8,27 +8,15 @@
     <section class="w-100 p-4">
         <h4>Match</h4>
 
-        {% for members in participants %}
-        {{members['name']}}
-            {% if not loop.last %}
-            vs
-            {% endif %}
-        {% endfor %}
+        {{ tag_teams["team_1"]["member_1"]['name'] }} & 
+        {{ tag_teams["team_1"]["member_2"]['name'] }}
+         vs
+        {{ tag_teams["team_2"]["member_1"]['name'] }} & 
+        {{ tag_teams["team_2"]["member_2"]['name'] }}
         <hr>
         <h5>Rewards</h5>        
-        {% if myTitles[0] is not defined %}
-            <i>n/a</i>
-                
-        {% else %}
-            {% for title in myTitles %}
-                <span class="badge bg-warning text-dark"><img id="title" src="/static/images/title.png" alt="title logo" width="30px"> {{ titles[title|int -1]['name'] }}</span>
-            {% if not loop.last %}
-            <!-- <br> -->
-            {% endif %}
-            {% endfor %} 
-        {% endif %}
+            <i>n/a</i>               
         <hr>
-
         <h5>Roundup</h5>
             <div class="header"><span>Expand</span>
         
@@ -45,16 +33,19 @@
             </div>
         <hr>
         <h5>Winner</h5>
-        {{booker.winner}} &#127881;
+        {% for winner in booker.winner %}
+        {{winner}}
+        {% if not loop.last %}
+        &
+        {% endif %}
+        {% endfor %}
+        &#127881;
         <hr>
         <h5>Breakdown</h5>
         <b>Star rating:</b>
         {% for x in range(0, booker.stars) %}
         &#11088;  
         {% endfor %}
-    
-
-
         <br>
 
     </section>

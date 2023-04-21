@@ -1,198 +1,202 @@
-import os, json
-import logging
 import random
 from random import randint
 from unicodedata import name
 from colorama import Fore, Back, Style
 
 
-def booker(participants):
+def findkeys(node, kv):
+    if isinstance(node, list):
+        for i in node:
+            for x in findkeys(i, kv):
+                yield x
+    elif isinstance(node, dict):
+        if kv in node:
+            yield node[kv]
+        for j in node.values():
+            for x in findkeys(j, kv):
+                yield x
 
-    print("Running the tagmatch_runner")
-    # print(participants)
-    team_1 = []
-    team_1.append(participants["team_1"]["member_1"]["stats"].name)
-    team_1.append(participants["team_1"]["member_2"]["stats"].name)
-    team_2 = []
-    team_2.append(participants["team_2"]["member_1"]["stats"].name)
-    team_2.append(participants["team_2"]["member_2"]["stats"].name)
-    print("TEAM 1:")
-    print(team_1)
-    print("TEAM 2:")
-    print(team_2)
 
-    roundup = []
-    count = 0
+class Booker:
+    def __init__(self, participants, bonuses, moves):
 
-    while True:
-        count += 1
-        rand = randint(0, 5)
-        attacker = rand(team_1)
-        print(f"attacker is: {attacker}")
-        defender = rand(team_2)
-        print(f"attacker is: {defender}")
-        # hit = (int(attacker.attack)/int(defender.defense)*rand)
+        print("Running the tagmatch_runner")
 
-        # # use turn var to determine who's going to attack and who's going to defend (1 = attacker, 2 = defender)
-        # turn_list = [1, 2, 'attk_come_back', 'def_come_back', 'finisher']
+        team_1 = []
+        team_1.append(participants["team_1"]["member_1"])
+        team_1.append(participants["team_1"]["member_2"])
+        print("test team_1")
 
-        # turn = random.choices(turn_list, weights=(50, 50, 5, 5, 10))
+        print("end test team_1")
 
-        # # define some moves
-        # move_list = ['suplex','dropkick','uppercut','punch','german suplex','piledriver','ddt','clothesline','back breaker']
+        team_2 = []
+        team_2.append(participants["team_2"]["member_1"])
+        team_2.append(participants["team_2"]["member_2"])
+        print("TEAM 1:")
+        print(team_1)
+        print("TEAM 2:")
+        print(team_2)
 
-        # # start the turn based attack/defense system
-        # if 1 in turn:
-        #   move = random.choice(move_list)
-        #   outcome=f"{str(defender_key)} [{str(defender_health)}] is hit with a {move} [{str(hit)}] by  {str(attacker_key)} [{str(defender_health)}]"
-        #   defender_health = int(defender_health) - hit
-        #   roundup.append(outcome)
-        #   # print(roundup)
+        comeback_plus = 5
+        finisher_count = 0
+        roundup = []
+        count = 0
 
-        # elif 2 in turn:
-        #   move = random.choice(move_list)
-        #   defender_health = int(defender_health) - hit
-        #   outcome=f"{str(attacker_key)} [{str(defender_health)}] is hit with a {move} [{str(hit)}] by  {str(defender_key)} [{str(defender_health)}]"
-        #   roundup.append(outcome)
-        #   # print(roundup)
+        attacker = random.choice(team_1)
+        # print(f"attacker is: {attacker.name}")
+        # print(f"attacker health is: {attacker.health}")
+        # print(f"attacker health is: {attacker}")
+        defender = random.choice(team_2)
+        # print(f"defender is: {defender.name}")
+        # print(f"defender health is: {defender.health}")
 
-        # elif "attk_come_back" in turn:
-        #   attacker_health = int(attacker_health) + comeback_plus
-        #   outcome=f"{str(attacker_key)} [{str(attacker_health)}] starts rallying the crowd behind them &#128293; [+{str(comeback_plus)}!]"
-        #   roundup.append(outcome)
+        attacker_key = attacker.name
+        defender_key = defender.name
+        attacker.match_role = "attacker"
+        defender.match_role = "defender"
+        attacker_health = attacker.health
+        defender_health = defender.health
 
-        # elif "def_come_back" in turn:
-        #   defender_health = int(defender_health) + comeback_plus
-        #   outcome=f"{str(defender_key)} [{str(defender_health)}] starts rallying the crowd behind them &#128293; [+{str(comeback_plus)}!]"
-        #   roundup.append(outcome)
-    # attacker     = participants[0]
-    # defender     = participants[1]
-    # attacker_key = attacker.name
-    # defender_key = defender.name
-    # attacker.match_role = "attacker"
-    # defender.match_role = "defender"
-    # attacker_health = attacker.health
-    # defender_health = defender.health
+        while True:
+            count += 1
+            rand = randint(0, 5)
+            hit = int(attacker.attack) / int(defender.defense) * rand
 
-    # comeback_plus = 5
+            # use turn var to determine who's going to attack and who's going to defend (1 = attacker, 2 = defender)
+            turn_list = [
+                1,
+                2,
+                "attk_come_back",
+                "def_come_back",
+                "finisher",
+                "attackTag",
+                "defendTag",
+            ]
 
-    # print( Fore.GREEN + str(attacker_key).upper() + " VS " + str(defender_key).upper() + Style.RESET_ALL)
-    # match=f"{str(attacker_key)} VS {str(defender_key)}"
-    # roundup = []
-    # count = 0
-    # finisher_count = 0
+            turn = random.choices(
+                turn_list,
+                weights=(50, 50, 10, 10, 10, 10, 10),
+            )
 
-    # while True:
-    #   count += 1
-    #   rand = randint(0, 5)
-    #   hit = (int(attacker.attack)/int(defender.defense)*rand)
+            if 1 in turn:
+                move = random.choice(moves)
+                outcome = f"{str(defender_key)} [{str(defender_health)}] is hit with a {move} [{str(hit)}] by  {str(attacker_key)} [{str(attacker_health)}]"
+                defender_health = int(defender_health) - hit
+                roundup.append(outcome)
+                # print(roundup)
 
-    #   # use turn var to determine who's going to attack and who's going to defend (1 = attacker, 2 = defender)
-    #   turn_list = [1, 2, 'attk_come_back', 'def_come_back', 'finisher']
+            elif 2 in turn:
+                move = random.choice(moves)
+                outcome = f"{str(attacker_key)} [{str(attacker_health)}] is hit with a {move} [{str(hit)}] by  {str(defender_key)} [{str(defender_health)}]"
+                attacker_health = int(attacker_health) - hit
+                roundup.append(outcome)
+                # print(roundup)
 
-    #   turn = random.choices(turn_list, weights=(50, 50, 5, 5, 10))
+            elif "attackTag" in turn:
+                outcome = (
+                    f"{str(attacker_key)} [{str(attacker_health)}] goes for the tag!"
+                )
+                print("TEST TEST TEST")
+                print("TEST TEST TEST")
+                attacker.health = attacker_health
+                roundup.append(outcome)
+                # Tag in!
+                lastChoice = attacker
+                attacker = random.choice(team_1)
+                while lastChoice.id == attacker.id:
+                    attacker = random.choice(team_1)
 
-    #   # define some moves
-    #   move_list = ['suplex','dropkick','uppercut','punch','german suplex','piledriver','ddt','clothesline','back breaker']
+                attacker_key = attacker.name
+                attacker.match_role = "attacker"
+                attacker_health = attacker.health
 
-    #   # start the turn based attack/defense system
-    #   if 1 in turn:
-    #     move = random.choice(move_list)
-    #     outcome=f"{str(defender_key)} [{str(defender_health)}] is hit with a {move} [{str(hit)}] by  {str(attacker_key)} [{str(defender_health)}]"
-    #     defender_health = int(defender_health) - hit
-    #     roundup.append(outcome)
-    #     # print(roundup)
+                outcome = f"{str(attacker_key)} [{str(attacker_health)}] is now the legal man &#128079;!"
+                roundup.append(outcome)
+                # print(roundup)
 
-    #   elif 2 in turn:
-    #     move = random.choice(move_list)
-    #     defender_health = int(defender_health) - hit
-    #     outcome=f"{str(attacker_key)} [{str(defender_health)}] is hit with a {move} [{str(hit)}] by  {str(defender_key)} [{str(defender_health)}]"
-    #     roundup.append(outcome)
-    #     # print(roundup)
+            elif "defendTag" in turn:
+                outcome = (
+                    f"{str(defender_key)} [{str(defender_health)}] goes for the tag!"
+                )
+                defender.health = defender_health
+                roundup.append(outcome)
+                # Tag in!
+                lastChoice = defender
+                defender = random.choice(team_2)
+                while lastChoice.id == defender.id:
+                    defender = random.choice(team_2)
+                defender_key = defender.name
+                defender.match_role = "defender"
+                defender_health = defender.health
 
-    #   elif "attk_come_back" in turn:
-    #     attacker_health = int(attacker_health) + comeback_plus
-    #     outcome=f"{str(attacker_key)} [{str(attacker_health)}] starts rallying the crowd behind them &#128293; [+{str(comeback_plus)}!]"
-    #     roundup.append(outcome)
+                outcome = f"{str(defender_key)} [{str(defender_health)}] is now the legal man &#128079;!"
+                roundup.append(outcome)
 
-    #   elif "def_come_back" in turn:
-    #     defender_health = int(defender_health) + comeback_plus
-    #     outcome=f"{str(defender_key)} [{str(defender_health)}] starts rallying the crowd behind them &#128293; [+{str(comeback_plus)}!]"
-    #     roundup.append(outcome)
+            elif "attk_come_back" in turn:
+                outcome = f"{str(attacker_key)} [{str(attacker_health)}] starts rallying the crowd behind them &#128293; [+{str(comeback_plus)}!]"
+                attacker_health = int(attacker_health) + comeback_plus
+                roundup.append(outcome)
 
-    #   elif "finisher" in turn:
-    #     who=random.sample([defender, attacker], 2)
-    #     print(who)
-    #     success=random.choice(['success','failure'])
-    #     if 'success' in success:
-    #       damage = (10*random.randint(1, 10))
-    #       finisher_count = finisher_count + 1
-    #       if 'defender' in who[1].match_role:
-    #         defender_health = int(defender_health) - damage
-    #       else:
-    #         attacker_health = int(attacker_health) - damage
-    #     else:
-    #       damage = 0
+            elif "def_come_back" in turn:
+                outcome = f"{str(defender_key)} [{str(defender_health)}] starts rallying the crowd behind them &#128293; [+{str(comeback_plus)}!]"
+                defender_health = int(defender_health) + comeback_plus
+                roundup.append(outcome)
 
-    #     outcome=f"{str(who[0].name)} attempts their finisher {who[0].finisher} on {str(who[1].name)} it was a {success} &#128079; [-{damage}!]"
-    #     roundup.append(outcome)
+            elif "finisher" in turn:
+                who = random.sample([defender, attacker], 2)
+                success = random.choice(["success", "failure"])
+                if "success" in success:
+                    damage = 10 * random.randint(1, 10)
+                    finisher_count = finisher_count + 1
+                    if "defender" in who[1].match_role:
+                        defender_health = int(defender_health) - damage
+                    else:
+                        attacker_health = int(attacker_health) - damage
+                else:
+                    damage = 0
 
-    #   # Declare the winner!
-    #   if int(defender_health) <= 0:
-    #     result = f"{str(attacker_key)} defeats {str(defender_key)}"
-    #     winner = f"{str(attacker_key)}"
-    #     loser = f"{str(defender_key)}"
-    #     # Work out rating based on number of stages and how random choices
-    #     rating = int(count)/10+int(attacker.level)+int(defender.level)+int(defender.attack)+int(attacker.attack)+bonuses
-    #     if rating < 20:
-    #         stars=1
-    #     elif (rating >= 20 and rating < 40):
-    #         stars=2
-    #     elif (rating >= 40 and rating < 60):
-    #         stars=3
-    #     elif (rating >= 60 and rating < 80):
-    #         stars=4
-    #     elif (rating >= 80):
-    #         stars=5
-    #     else:
-    #         stars=0
-    #     print(rating)
-    #     return(match,roundup,result,winner,loser,stars)
-    #     # break
-    #   elif int(attacker_health) <= 0:
-    #     result = f"{str(defender_key)} defeats {str(attacker_key)}"
-    #     winner = f"{str(defender_key)}"
-    #     loser = f"{str(attacker_key)}"
-    #     # Work out rating based on number of stages and how random choices
-    #     rating = int(count)/10+int(attacker.level)+int(defender.level)+int(defender.attack)+int(attacker.attack)+bonuses
-    #     if rating < 20:
-    #         stars=1
-    #     elif (rating >= 20 and rating < 40):
-    #         stars=2
-    #     elif (rating >= 40 and rating < 60):
-    #         stars=3
-    #     elif (rating >= 60 and rating < 80):
-    #         stars=4
-    #     elif (rating >= 80):
-    #         stars=5
-    #     else:
-    #         stars=0
-    #     print(rating)
-    # return(match,roundup,result,winner,loser,stars)
-    return participants
-    # break
+                outcome = f"{str(who[0].name)} attempts their finisher {who[0].finisher} on {str(who[1].name)} it was a {success} &#128079; [-{damage}!]"
+                roundup.append(outcome)
 
-    # {% if (booker[5]|int < 20) %}
-    # &#11088;
-    # {% elif (booker[5]|int >= 20 and booker[5]|int < 40) %}
-    # &#11088; &#11088;
-    # {% elif (booker[5]|int >= 40 and booker[5]|int < 60) %}
-    # &#11088; &#11088; &#11088;
-    # {% elif (booker[5]|int >= 60 and booker[5]|int < 80) %}
-    # &#11088; &#11088; &#11088; &#11088;
-    # {% elif (booker[5]|int >= 80) %}
-    # &#11088; &#11088; &#11088; &#11088; &#11088;
-    # {% else %}
-    # no star
-    # {% endif %}
-    # return(match,roundup,result,winner,loser)
+            # Work out rating based on number of stages and how random choices
+            rating = (
+                int(count) / 10
+                + int(attacker.level)
+                + int(defender.level)
+                + int(defender.attack)
+                + int(attacker.attack)
+                + bonuses
+            )
+            if rating < 20:
+                self.stars = 1
+            elif rating >= 20 and rating < 40:
+                self.stars = 2
+            elif rating >= 40 and rating < 60:
+                self.stars = 3
+            elif rating >= 60 and rating < 80:
+                self.stars = 4
+            elif rating >= 80:
+                self.stars = 5
+            else:
+                self.stars = 0
+
+            self.roundup = roundup
+            # Declare the winner!
+            if int(defender_health) <= 0:
+                self.result = f"{str(team_1)} defeats {str(team_2)}"
+                self.winner = []
+                for x in team_1:
+                    self.winner.append(x.name)
+                self.loser = []
+                for x in team_2:
+                    self.loser.append(x.name)
+                break
+            elif int(attacker_health) <= 0:
+                self.result = f"{str(team_2)} defeats {str(team_1)}"
+                self.winner = []
+                for x in team_2:
+                    self.winner.append(x.name)
+                self.loser = []
+                for x in team_1:
+                    self.loser.append(x.name)
+                break

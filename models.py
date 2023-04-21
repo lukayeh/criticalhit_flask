@@ -81,6 +81,7 @@ class Companies(db.Model):
     def __repr__(self):
         return f"<Companies {self.name}>"
 
+
 class Moves(db.Model):
     __table_args__ = {"extend_existing": True}
     # See http://flask-sqlalchemy.pocoo.org/2.0/models/#simple-example
@@ -92,6 +93,7 @@ class Moves(db.Model):
 
     def __repr__(self):
         return f"<Moves {self.name}>"
+
 
 class Result(db.Model):
     __table_args__ = {"extend_existing": True}

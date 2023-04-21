@@ -1,6 +1,5 @@
 # app/booker/routes.py
 # this is where you can put all your booker routes
-from distutils.file_util import move_file
 from flask import render_template, request, redirect, flash, url_for
 from application.booker import post_runner  # importing the runner
 from application.booker import tagmatch  # importing the runner
@@ -38,13 +37,14 @@ def before_request():
     pass
 
 
-@booker_blueprint.route("/test")
-def test():
+@booker_blueprint.route("/booker_tag_post", methods=["POST"])
+def booker_tag_post():
 
-    team1_01 = 2
-    team1_02 = 3
-    team2_01 = 4
-    team2_02 = 5
+    team1_01 = request.form["participant1"]
+    team1_02 = request.form["participant2"]
+
+    team2_01 = request.form["participant3"]
+    team2_02 = request.form["participant4"]
 
     tagteams = {}
     tagteams[f"team_1"] = {}
@@ -65,14 +65,63 @@ def test():
         for key in t_info:
             print(t_info[key]["id"])
             member = Roster.query.filter_by(id=t_info[key]["id"]).first()
-            tagteams[t_id][key]["stats"] = member
+            # tagteams[t_id][key]["stats"] = member
+            tagteams[t_id][key] = member
+    print(tagteams)
+    bonus = 0
 
-    booker = tagmatch.booker(participants=tagteams)
-    print(booker)
+    # Retrieve moves list
+    moves = Moves.query.all()
+    moves_list = []
+    for move in moves:
+        moves_list.append(move.name)
 
-    # print(tagteams)
+    booker = tagmatch.Booker(participants=tagteams, moves=moves_list, bonuses=bonus)
 
-    return render_template("test.html", tag_teams=tagteams)
+    # Add to the result table
+    booker_string = ",".join(map(str, booker.roundup))
+    new_result = Result(
+        result=booker.result,
+        rating=booker.stars,
+        winner=str(booker.winner),
+        loser=str(booker.loser),
+        description=booker_string,
+    )
+    db.session.add(new_result)
+
+    # # Update the loser
+    for x in booker.loser:
+        update_loser = Roster.query.filter_by(name=x).first()
+        update_loser.health = (update_loser.health) - 5
+        update_loser.losses = update_loser.losses + 1
+        update_loser.morale = update_loser.morale - 5
+    # # Update the winner
+    for x in booker.winner:
+        update_winner = Roster.query.filter_by(name=x).first()
+        update_winner.level = update_winner.level + 1
+        update_winner.wins = update_winner.wins + 1
+
+    db.session.commit()
+
+    return render_template("booker_tag_post.html", tag_teams=tagteams, booker=booker)
+
+
+###############################################
+#          Render Booker_tag page                 #
+###############################################
+@booker_blueprint.route("/booker_tag")
+def booker_tag():
+
+    company = "%{}%".format(my_company)
+    roster = Roster.query.filter(
+        Roster.association.like(company),
+        Roster.active == "active",
+        Roster.role == "wrestler",
+    ).all()
+    titles = Titles.query.all()
+    return render_template(
+        "booker_tag.html", title="Booker", roster=roster, titles=titles
+    )
 
 
 ###############################################
@@ -179,34 +228,41 @@ def booker_post():
     else:
         fued_bonus = "false"
         print(f"No fued found")
-    
-    #Retrieve moves list
-    moves=Moves.query.all()
-    moves_list=[]
+
+    # Retrieve moves list
+    moves = Moves.query.all()
+    moves_list = []
     for move in moves:
         moves_list.append(move.name)
 
-    booker = post_runner.booker(
+    booker = post_runner.Booker(
         participants=participants_sql,
         bonuses=bonus,
         omgmoment=omgmoment,
         runin_moment=runin_moment,
-        moves=moves_list
+        moves=moves_list,
     )
-    booker_string = ",".join(map(str, booker[1]))
+    print(booker.winner)
+    booker_string = ",".join(map(str, booker.roundup))
 
     # conn.execute("INSERT INTO result (result, rating, description) VALUES (?, ?, ?)", [booker[2], booker[5], booker_string])
 
     # Add to the result table
-    new_result = Result(result=booker[2], rating=booker[5], winner=booker[3], loser=booker[4], description=booker_string)
+    new_result = Result(
+        result=booker.result,
+        rating=booker.stars,
+        winner=booker.winner,
+        loser=booker.loser,
+        description=booker_string,
+    )
     db.session.add(new_result)
     # Update the loser
-    update_loser = Roster.query.filter_by(name=booker[4]).first()
+    update_loser = Roster.query.filter_by(name=booker.loser).first()
     update_loser.health = (update_loser.health) - 5
     update_loser.losses = update_loser.losses + 1
     update_loser.morale = update_loser.morale - 5
     # Update the winner
-    update_winner = Roster.query.filter_by(name=booker[3]).first()
+    update_winner = Roster.query.filter_by(name=booker.winner).first()
     update_winner.level = update_winner.level + 1
     update_winner.wins = update_winner.wins + 1
 
