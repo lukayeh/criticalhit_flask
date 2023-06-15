@@ -41,6 +41,7 @@ class Booker:
         finisher_count = 0
         roundup = []
         count = 0
+        nearMisses = 0
 
         attacker = random.choice(team_1)
         # print(f"attacker is: {attacker.name}")
@@ -182,21 +183,70 @@ class Booker:
 
             self.roundup = roundup
             # Declare the winner!
-            if int(defender_health) <= 0:
-                self.result = f"{str(team_1)} defeats {str(team_2)}"
-                self.winner = []
-                for x in team_1:
-                    self.winner.append(x.name)
-                self.loser = []
-                for x in team_2:
-                    self.loser.append(x.name)
-                break
-            elif int(attacker_health) <= 0:
-                self.result = f"{str(team_2)} defeats {str(team_1)}"
-                self.winner = []
-                for x in team_2:
-                    self.winner.append(x.name)
-                self.loser = []
-                for x in team_1:
-                    self.loser.append(x.name)
-                break
+            if int(defender_health) <= 10:
+                outcome = f"{str(attacker_key)} [{str(attacker_health)}] attempts a pin on {str(defender_key)} [{str(defender_health)}] ..."
+                roundup.append(outcome)
+                refCount = random.choices([1,2,3], weights=(50,50,10))
+                
+                if refCount[0] < 3:
+                    outcome = f"Kick out at {refCount}!"
+                    roundup.append(outcome)
+                    nearMisses = nearMisses + 5
+                    defender_health = int(defender_health) + 20
+                else:
+                    outcome = f"its a {refCount}! It's all over folks!!"
+                    roundup.append(outcome)
+                    self.result = f"{str(attacker_key)} defeats {str(defender_key)}"
+                    self.winner = []
+                    for x in team_1:
+                        self.winner.append(x.name)
+                    self.loser = []
+                    for x in team_2:
+                        self.loser.append(x.name)
+                    self.roundup = roundup
+                    nearMisses = nearMisses + 5
+                    self.roundup = roundup
+                    print(f"winner: {self.winner}")
+                    break
+
+            elif int(attacker_health) <= 10:
+                outcome = f"{str(defender_key)} [{str(defender_health)}] attempts a pin on {str(attacker_key)} [{str(attacker_health)}] ..."
+                roundup.append(outcome)
+                refCount = random.choices([1,2,3], weights=(50,50,5))
+                if refCount[0] < 3:
+                    outcome = f"Kick out at {refCount}!"
+                    roundup.append(outcome)
+                    attacker_health = int(attacker_health) + 20
+                else:
+                    outcome = f"its a {refCount}! It's all over folks!!"
+                    roundup.append(outcome)
+                    self.result = f"{str(team_1)} defeats {str(team_2)}"
+                    self.winner = []
+                    for x in team_1:
+                        self.loser.append(x.name)
+                    self.loser = []
+                    for x in team_2:
+                        self.winner.append(x.name)
+                    self.roundup = roundup
+                    print(f"winners: {self.winner}")
+                    break
+
+            # # Declare the winner!
+            # if int(defender_health) <= 0:
+            #     self.result = f"{str(team_1)} defeats {str(team_2)}"
+            #     self.winner = []
+            #     for x in team_1:
+            #         self.winner.append(x.name)
+            #     self.loser = []
+            #     for x in team_2:
+            #         self.loser.append(x.name)
+            #     break
+            # elif int(attacker_health) <= 0:
+            #     self.result = f"{str(team_2)} defeats {str(team_1)}"
+            #     self.winner = []
+            #     for x in team_2:
+            #         self.winner.append(x.name)
+            #     self.loser = []
+            #     for x in team_1:
+            #         self.loser.append(x.name)
+            #     break

@@ -1,14 +1,14 @@
 import random
 from random import randint
-from unicodedata import name
 from colorama import Fore, Back, Style
 
 
 class Booker:
-    def __init__(self, participants, bonuses, omgmoment, runin_moment, moves):
+    def __init__(self, participants, bonuses, omgmoment, runin_moment, moves, stipulation):
 
         print("Running the post_runner")
         print(f"BONUS IS {bonuses}")
+        print(f"Stipulation is: {stipulation}")
         attacker = participants[0]
         defender = participants[1]
         attacker_key = attacker.name
@@ -27,9 +27,9 @@ class Booker:
             + str(defender_key).upper()
             + Style.RESET_ALL
         )
-        match = f"{str(attacker_key)} VS {str(defender_key)}"
         roundup = []
         count = 0
+        nearMisses = 0
         finisher_count = 0
 
         if omgmoment == "true":
@@ -58,10 +58,36 @@ class Booker:
                 "run_in",
             ]
 
+            choiceWeights = [50, 50, 5, 5, 10, omgmoment_likelihood, run_in_likelihood]
+
+            if stipulation == "hardcore":
+                turn_list.append("hardcore_moment")
+                choiceWeights.append(50)
+                        
             turn = random.choices(
                 turn_list,
-                weights=(50, 50, 5, 5, 10, omgmoment_likelihood, run_in_likelihood),
+                weights=(choiceWeights),
             )
+
+            if "hardcore_moment" in turn:
+                moment_list = [
+                    "chair shot to the skull &#129681;",
+                    "ladder to the gut &#129692;",
+                    "trash bin over the head &#128465;",
+                    "spear through a wooden table &#129717;",
+                    "spray from the fire extinguisher &#129519;",
+                    "vicious shot to the skull with a sledge hammer &#128296;",
+                ]
+                moment = random.choice(moment_list)
+                who = random.sample([defender, attacker], 2)
+                damage = 4 * random.randint(1, 10)
+                if "defender" in who[1].match_role:
+                    defender_health = int(defender_health) - damage
+                else:
+                    attacker_health = int(attacker_health) - damage
+                outcome = f"{str(who[0].name)} hits {str(who[1].name)} with a {moment} [-{damage}!]"
+                roundup.append(outcome)
+
 
             # start the turn based attack/defense system
             if "omgmoment" in turn:
@@ -137,6 +163,8 @@ class Booker:
                 + int(defender.attack)
                 + int(attacker.attack)
                 + bonuses
+                + nearMisses
+                + finisher_count
             )
             if rating < 20:
                 self.stars = 1
@@ -152,19 +180,59 @@ class Booker:
                 self.stars = 0
 
             # Declare the winner!
-            if int(defender_health) <= 0:
-                self.result = f"{str(attacker_key)} defeats {str(defender_key)}"
-                self.winner = f"{str(attacker_key)}"
-                self.loser = f"{str(defender_key)}"
-                self.roundup = roundup
-                print(f"winner: {self.winner}")
-                # return (match, roundup, result, winner, loser, self.stars)
-                break
-            elif int(attacker_health) <= 0:
-                self.result = f"{str(defender_key)} defeats {str(attacker_key)}"
-                self.winner = f"{str(defender_key)}"
-                self.loser = f"{str(attacker_key)}"
-                self.roundup = roundup
-                print(f"winner: {self.winner}")
-                # return (match, roundup, result, winner, loser, self.stars)
-                break
+            if int(defender_health) <= 10:
+                outcome = f"{str(attacker_key)} [{str(attacker_health)}] attempts a pin on {str(defender_key)} [{str(defender_health)}] ..."
+                roundup.append(outcome)
+                refCount = random.choices([1,2,3], weights=(50,50,10))
+                
+                if refCount[0] < 3:
+                    outcome = f"Kick out at {refCount}!"
+                    roundup.append(outcome)
+                    nearMisses = nearMisses + 5
+                    defender_health = int(defender_health) + 20
+                else:
+                    outcome = f"its a {refCount}! It's all over folks!!"
+                    roundup.append(outcome)
+                    self.result = f"{str(attacker_key)} defeats {str(defender_key)}"
+                    self.winner = f"{str(attacker_key)}"
+                    self.loser = f"{str(defender_key)}"
+                    nearMisses = nearMisses + 5
+                    self.roundup = roundup
+                    print(f"winner: {self.winner}")
+                    break
+
+            elif int(attacker_health) <= 10:
+                outcome = f"{str(defender_key)} [{str(defender_health)}] attempts a pin on {str(attacker_key)} [{str(attacker_health)}] ..."
+                roundup.append(outcome)
+                refCount = random.choices([1,2,3], weights=(50,50,5))
+                if refCount[0] < 3:
+                    outcome = f"Kick out at {refCount}!"
+                    roundup.append(outcome)
+                    attacker_health = int(attacker_health) + 20
+                else:
+                    outcome = f"its a {refCount}! It's all over folks!!"
+                    roundup.append(outcome)
+                    self.result = f"{str(defender_key)} defeats {str(attacker_key)}"
+                    self.winner = f"{str(defender_key)}"
+                    self.loser = f"{str(attacker_key)}"
+                    self.roundup = roundup
+                    print(f"winner: {self.winner}")
+                    break
+
+            # Declare the winner!
+            # if int(defender_health) <= 0:
+            #     self.result = f"{str(attacker_key)} defeats {str(defender_key)}"
+            #     self.winner = f"{str(attacker_key)}"
+            #     self.loser = f"{str(defender_key)}"
+            #     self.roundup = roundup
+            #     print(f"winner: {self.winner}")
+            #     # return (match, roundup, result, winner, loser, self.stars)
+            #     break
+            # elif int(attacker_health) <= 0:
+            #     self.result = f"{str(defender_key)} defeats {str(attacker_key)}"
+            #     self.winner = f"{str(defender_key)}"
+            #     self.loser = f"{str(attacker_key)}"
+            #     self.roundup = roundup
+            #     print(f"winner: {self.winner}")
+            #     # return (match, roundup, result, winner, loser, self.stars)
+            #     break

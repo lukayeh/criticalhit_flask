@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h3>&#127968; Booker Home </h3>
+<hr>
+<div class="bg-white border rcorners1">
+  <section class="w-100 p-4">
+        <h4>&#128240; Choose your match type... </h4>
+        <hr>
+        <div class="card-group">
+          <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="../static/images/singlesMatch.jpeg" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Singles Match</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              <a href="{{ url_for('booker_assets.booker') }}" class="btn btn-primary">Book it</a>
+            </div>
+          </div>
+          <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="../static/images/tagMatch.jpeg" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Tag Match</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              <a href="{{ url_for('booker_assets.booker_tag') }}" class="btn btn-primary">Book it</a>
+            </div>
+          </div>
+          <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="../static/images/ladderMatch.jpeg" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Ladder Match</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              <a href="{{ url_for('booker_assets.booker') }}" class="btn btn-primary">Book it</a>
+            </div>
+          </div>
+        </div>
+        
+
+
+        
+        <!-- <a href="{{ url_for('booker_assets.booker') }}" role="button"  class="btn btn-secondary btn-lg btn-block">Singles match</a>
+        <a href="{{ url_for('booker_assets.booker_tag') }}" role="button"  class="btn btn-secondary btn-lg btn-block">Tag match</a> -->
+
+        <p></p>
+
+    </section>
+  </div>
+
+
+
+
+{% endblock %}
+

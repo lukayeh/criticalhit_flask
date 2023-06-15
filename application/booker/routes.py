@@ -8,21 +8,12 @@ from flask import render_template
 import utils  # import utils!
 from models import *
 from sqlalchemy import or_, and_
+import random
 
 ###############################################
 #          Module Level Variables             #
 ###############################################
 my_company = 2
-
-###############################################
-#          Define dict factory                #
-###############################################
-def dict_factory(cursor, row):
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
-
 
 ###############################################
 #          Login required                     #
@@ -36,6 +27,10 @@ def before_request():
     """Protect all of the admin endpoints."""
     pass
 
+
+@booker_blueprint.route("/booker_home")
+def booker_home():
+    return render_template("booker_home.html")
 
 @booker_blueprint.route("/booker_tag_post", methods=["POST"])
 def booker_tag_post():
@@ -61,11 +56,9 @@ def booker_tag_post():
 
     for t_id, t_info in tagteams.items():
         print("Team:", t_id)
-
         for key in t_info:
             print(t_info[key]["id"])
             member = Roster.query.filter_by(id=t_info[key]["id"]).first()
-            # tagteams[t_id][key]["stats"] = member
             tagteams[t_id][key] = member
     print(tagteams)
     bonus = 0
@@ -80,11 +73,14 @@ def booker_tag_post():
 
     # Add to the result table
     booker_string = ",".join(map(str, booker.roundup))
+    winners = str(booker.winner[0] + " & " + booker.winner[1])
+    losers = str(booker.loser[0] + " & " + booker.loser[1])
+    result =  str(booker.winner[0] + " & " + booker.winner[1] + " defeats " + booker.loser[0] + " & " + booker.loser[1])
     new_result = Result(
-        result=booker.result,
+        result=result,
         rating=booker.stars,
-        winner=str(booker.winner),
-        loser=str(booker.loser),
+        winner=winners,
+        loser=losers,
         description=booker_string,
     )
     db.session.add(new_result)
@@ -214,6 +210,9 @@ def booker_post():
     # Check for run in moment
     if "run_in" in request.form:
         print(f"Random run_in moment set")
+        # rand = random.randrange(0, Roster.query.count()) 
+        # runner = Roster.query.filter(Roster.id == request.form[rand]).all()
+        # print(runner)
         runin_moment = "true"
         bonus = bonus + 5
     else:
@@ -235,13 +234,17 @@ def booker_post():
     for move in moves:
         moves_list.append(move.name)
 
+    stipulation=""
+
     booker = post_runner.Booker(
         participants=participants_sql,
         bonuses=bonus,
         omgmoment=omgmoment,
         runin_moment=runin_moment,
         moves=moves_list,
+        stipulation=stipulation,
     )
+
     print(booker.winner)
     booker_string = ",".join(map(str, booker.roundup))
 
