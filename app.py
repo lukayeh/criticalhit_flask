@@ -73,22 +73,6 @@ app.register_blueprint(auth_blueprint)
 
 app.secret_key = "abc"
 
-
-@app.route("/test")
-def test():
-
-    roster = db.Table("roster")
-    # Equivalent to 'SELECT * FROM census'
-    query = db.select([roster])
-    ResultProxy = connection.execute(query)
-    ResultSet = ResultProxy.fetchall()
-    print(ResultSet[:3])
-
-    test = "temp"
-
-    return test
-
-
 ###############################################
 #          Disable caching                    #
 ###############################################
@@ -103,7 +87,6 @@ def add_header(r):
     r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     r.headers["Pragma"] = "no-cache"
     r.headers["Expires"] = "0"
-    r.headers["Cache-Control"] = "public, max-age=0"
     return r
 
 

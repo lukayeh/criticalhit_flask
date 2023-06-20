@@ -9,7 +9,8 @@
         <h4>&#128240; Choose your match type... </h4>
         <hr>
         <div class="card-group">
-          <div class="card" style="width: 18rem;">
+        <!-- Start of card group -->
+          <div class="card" style="min-width: 18rem;">
             <img class="card-img-top" src="../static/images/singlesMatch.jpeg" alt="Card image cap">
             <div class="card-body">
               <h5 class="card-title">Singles Match</h5>
@@ -17,7 +18,7 @@
               <a href="{{ url_for('booker_assets.booker') }}" class="btn btn-primary">Book it</a>
             </div>
           </div>
-          <div class="card" style="width: 18rem;">
+          <div class="card" style="min-width: 18rem;">
             <img class="card-img-top" src="../static/images/tagMatch.jpeg" alt="Card image cap">
             <div class="card-body">
               <h5 class="card-title">Tag Match</h5>
@@ -25,7 +26,7 @@
               <a href="{{ url_for('booker_assets.booker_tag') }}" class="btn btn-primary">Book it</a>
             </div>
           </div>
-          <div class="card" style="width: 18rem;">
+          <div class="card" style="min-width: 18rem;">
             <img class="card-img-top" src="../static/images/ladderMatch.jpeg" alt="Card image cap">
             <div class="card-body">
               <h5 class="card-title">Ladder Match</h5>
@@ -33,7 +34,10 @@
               <a href="{{ url_for('booker_assets.booker') }}" class="btn btn-primary">Book it</a>
             </div>
           </div>
+        <!--End of card group  -->
         </div>
+
+        
         
 
 
