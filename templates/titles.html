@@ -22,10 +22,12 @@
             <td>{{ title.name }}</td>
             <td>
               {% for member in roster %}
-              {% if title.id|safe in member.accolade %}
-              <li>{{member.name}}
-              {% endif %}
-              {% endfor %}
+              <ul>
+                {% if title.id|safe in member.accolade %}
+                <li>{{member.name}}
+                {% endif %}
+                {% endfor %}
+              </ul>
             </td>
             <td>{{ title.type }}</td>
             <td>{{ title.img }}</td>
