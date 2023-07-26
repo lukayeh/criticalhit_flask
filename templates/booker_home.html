@@ -19,6 +19,21 @@
             </div>
           </div>
           <div class="card" style="min-width: 18rem;">
+            <img class="card-img-top" src="../static/images/rumbleMatch.jpeg" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Multi-man Match</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.
+
+                <div class="form-outline" style="width: 22rem;">
+                  <label class="form-label" for="typeNumber">Number of Participants</label>
+                  <input step="1" value="2" type="number" id="typeNumber" class="form-control" />
+              </div>
+
+            </p>
+              <a href="{{ url_for('booker_assets.booker_multi') }}" class="btn btn-primary">Book it</a>
+            </div>
+          </div>
+          <div class="card" style="min-width: 18rem;">
             <img class="card-img-top" src="../static/images/tagMatch.jpeg" alt="Card image cap">
             <div class="card-body">
               <h5 class="card-title">Tag Match</h5>
@@ -26,14 +41,14 @@
               <a href="{{ url_for('booker_assets.booker_tag') }}" class="btn btn-primary">Book it</a>
             </div>
           </div>
-          <div class="card" style="min-width: 18rem;">
+          <!-- <div class="card" style="min-width: 18rem;">
             <img class="card-img-top" src="../static/images/ladderMatch.jpeg" alt="Card image cap">
             <div class="card-body">
               <h5 class="card-title">Ladder Match</h5>
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
               <a href="{{ url_for('booker_assets.booker') }}" class="btn btn-primary">Book it</a>
             </div>
-          </div>
+          </div> -->
         <!--End of card group  -->
         </div>
 

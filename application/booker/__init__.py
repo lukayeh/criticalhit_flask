@@ -4,3 +4,4 @@ import utils  # import utils!
 booker_blueprint = Blueprint("booker_assets", __name__)
 
 from application.booker import routes
+from application.booker import routes_2

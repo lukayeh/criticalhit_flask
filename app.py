@@ -2,7 +2,7 @@
 #          Import some packages               #
 ###############################################
 from flask import Flask
-from flask_bootstrap import Bootstrap5
+from flask_bootstrap import Bootstrap5 as Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
@@ -102,7 +102,7 @@ def inject_globals():
 #             Init our app                    #
 ###############################################
 # nav.init_app(app)
-bootstrap = Bootstrap5(app)
+bootstrap = Bootstrap(app)
 
 ###############################################
 #                Run app                      #
