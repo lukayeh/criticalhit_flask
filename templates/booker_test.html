@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Welcome to Booker TEST</h1>
+<h3>&#128214; Results: </h3>
+<hr>
+<div class="bg-white border rcorners1">
+    <section class="w-100 p-4">
+        <h4>Match</h4>
+        {% for members in booker.players %}
+            {{members['name']}}
+            <sup>att:{{members['attack_power']}}, def:{{members['defense']}}, health:{{members['before_health']}}</sup>
+            {% if not loop.last %}
+            vs
+            {% endif %}
+        {% endfor %}
+        <hr>
+        <h5>Rewards</h5>        
+        <hr>
+
+        <h5>Roundup</h5>
+            <div class="header"><span>Expand</span>
+        
+            </div>
+            <div class="content">
+            <code>
+                <ul>
+                    {% for result in booker.output %}
+                    <li>{{ result|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </code>
+            <br>
+            </div>
+        <hr>
+        <h5>Winner</h5>
+        {{booker.winner.name}} &#127881;
+        <hr>
+        <h5>Breakdown</h5>
+        <b>Star rating:</b>
+        &#11088;  
+    
+
+
+        <br>
+
+    </section>
+
+</div>
+
+
+
+
+    <script src="../static/js/booker_post.js"></script>
+
+
+{% endblock %}
+

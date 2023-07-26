@@ -218,21 +218,3 @@ class Booker:
                     self.roundup = roundup
                     print(f"winner: {self.winner}")
                     break
-
-            # Declare the winner!
-            # if int(defender_health) <= 0:
-            #     self.result = f"{str(attacker_key)} defeats {str(defender_key)}"
-            #     self.winner = f"{str(attacker_key)}"
-            #     self.loser = f"{str(defender_key)}"
-            #     self.roundup = roundup
-            #     print(f"winner: {self.winner}")
-            #     # return (match, roundup, result, winner, loser, self.stars)
-            #     break
-            # elif int(attacker_health) <= 0:
-            #     self.result = f"{str(defender_key)} defeats {str(attacker_key)}"
-            #     self.winner = f"{str(defender_key)}"
-            #     self.loser = f"{str(attacker_key)}"
-            #     self.roundup = roundup
-            #     print(f"winner: {self.winner}")
-            #     # return (match, roundup, result, winner, loser, self.stars)
-            #     break
