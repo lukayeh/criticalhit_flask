@@ -31,4 +31,4 @@ def before_request():
 @results_blueprint.route("/results")
 def results():
     results = Result.query.filter().all()
-    return render_template("results.html", title="Home", result=results)
+    return render_template("results.html", title="Results", result=results)

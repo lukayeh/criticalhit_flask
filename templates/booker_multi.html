@@ -9,14 +9,54 @@
 <div class="bg-white border rcorners1">
     <section class="w-100 p-4">
         <form action="{{ url_for('booker_assets.booker_multi_post') }}" method="post">
+            <table class="table table-striped">
+              <caption>Booker Table</caption>
+              <thead>
+              <tr>
+                {% for n in range(numberParticipants | int) %}
+                  <th scope="col">Choose competitor number {{ n+1 }}...</th>
+                {% endfor %}
+              </tr>
+              </thead>
+              <tbody>
 
-            <select class="select" multiple data-mdb-option-height="44">
-              {{roster}}
-              {% for member in roster %}
-              <option value="{{member['id']}}" data-mdb-secondary-text="Secondary text">{{member['name']}}</option>
-              {% endfor %}
-            </select>
-            <br>
+              <tr>
+                {% for n in range(numberParticipants | int) %}    
+                  <td>    
+                      <img id="participant{{ n+1 }}Image" class="myimg" src="/static/images/vacant.png" onerror="this.src='/static/images/vacant.png'" alt="wrestlers logo" width="200px">
+                  </td>
+                {% endfor %}  
+              </tr>
+              <tr>
+                {% for n in range(numberParticipants | int) %}    
+                  <td> 
+                      <select id="participant{{ n+1 }}" class="detailprodoption" name="participant{{ n+1 }}">
+                          <option value="" data-title-var="none" data-number-var="{{ n+1 }}" data-img-src="static/images/vacant.png" selected="selected">Choose your first competitor...</option>
+                          {% for members in roster %}
+                          <option value="{{members['id']}}"
+                                  data-number-var="{{ n+1 }}" 
+                              {% if "none" in members.accolade %}
+                                  data-title-var="none" 
+                                  data-title-id="none" 
+                              {% else %}
+                              {% set list1 = members.accolade.split(',') %}
+                              {% for item in list1 %}
+                                  data-title-var="{{ titles[item|int - 1]['name'] }}" 
+                                  data-title-id="{{ titles[item|int - 1]['id'] }}"
+                              {% endfor %} 
+                              {% endif %}
+                              data-img-src="{{members['img']}}">{{members['name']}} (lvl: {{members["level"]}})
+                          </option>"
+                          {% endfor %}
+                      </select>
+                  {% endfor %}  
+
+
+                  </td>
+              </tr>
+              
+              </tbody>
+            </table>
             <hr>
             <b>&#127873; Extras:</b>
             <br>
@@ -30,25 +70,12 @@
             <b>&#129351; Titles:</b>
             <br>
             <!-- Title for Participant 1 -->
-            <div style='display:none;' id='title_1'>
-                <input class="form-check-input" type="checkbox" id="titlematch_1" name="titlematch" value="">
-                <label for="titlematch"><p id="title_text"></p></label>
+            {% for n in range(numberParticipants | int) %}    
+            <div style='display:none;' id='title_participant{{ n+1 }}'>
+                <input class="form-check-input" type="checkbox" id="titlematch_participant{{ n+1 }}" name="titlematch" value="">
+                <label for="titlematch"><p id="title_text_participant{{ n+1 }}"></p></label>
             </div>
-            <!-- Title for Participant 2 -->
-            <div style='display:none;' id='title_2'>
-                <input class="form-check-input" type="checkbox" id="titlematch_2" name="titlematch_2" value="">
-                <label for="titlematch_2"><p id="title_2_text"></p></label>
-            </div>
-            <!-- Title for Participant 3 -->
-            <div style='display:none;' id='title_3'>
-                <input class="form-check-input" type="checkbox" id="titlematch_3" name="titlematch_3" value="">
-                <label for="titlematch_2"><p id="title_3_text"></p></label>
-            </div>
-            <!-- Title for Participant 4 -->
-            <div style='display:none;' id='title_4'>
-                <input class="form-check-input" type="checkbox" id="titlematch_4" name="titlematch_4" value="">
-                <label for="titlematch_2"><p id="title_4_text"></p></label>
-            </div>
+            {% endfor %}  
 
             <hr>
 
@@ -60,7 +87,7 @@
 </div>
 
 <script src="../static/js/booker.js"></script>
-<script src="../static/js/booker-select.js"></script>
+<script src="../static/js/booker-select-multi.js"></script>
 
 
 {% endblock %}

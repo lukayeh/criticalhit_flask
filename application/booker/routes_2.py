@@ -29,9 +29,9 @@ def before_request():
 ###############################################
 #          Render Booker_multi page           #
 ###############################################
-@booker_blueprint.route("/booker_multi")
+@booker_blueprint.route("/booker_multi", methods=["POST"])
 def booker_multi():
-
+    numberParticipants=request.form["participants"]
     company = "%{}%".format(my_company)
     roster = Roster.query.filter(
         Roster.association.like(company),
@@ -40,7 +40,7 @@ def booker_multi():
     ).all()
     titles = Titles.query.all()
     return render_template(
-        "booker_multi.html", title="Booker", roster=roster, titles=titles
+        "booker_multi.html", title="Booker", roster=roster, numberParticipants=numberParticipants, titles=titles
     )
 
 
@@ -49,8 +49,10 @@ def booker_multi():
 ###############################################
 @booker_blueprint.route("/booker_multi_post", methods=["POST"])
 def booker_multi_post():
-
-    playerIds = [1, 2, 3, 4]
+    playerIds = []
+    for x in request.form:
+        playerIds.append(request.form[x])
+    # playerIds = [1, 2, 3, 4]
     booker=match.Booker(playerIds)
 
-    return render_template("booker_test.html", booker=booker)
+    return render_template("booker_multi_post.html", booker=booker)

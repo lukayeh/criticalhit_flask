@@ -23,14 +23,16 @@
             <div class="card-body">
               <h5 class="card-title">Multi-man Match</h5>
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.
-
+            <form action="{{ url_for('booker_assets.booker_multi') }}" method="post">
                 <div class="form-outline" style="width: 22rem;">
                   <label class="form-label" for="typeNumber">Number of Participants</label>
-                  <input step="1" value="2" type="number" id="typeNumber" class="form-control" />
+                  <input id="participants" name="participants" step="1" value="2" type="number" class="form-control" />
               </div>
 
             </p>
-              <a href="{{ url_for('booker_assets.booker_multi') }}" class="btn btn-primary">Book it</a>
+              <!-- <a href="{{ url_for('booker_assets.booker_multi') }}" class="btn btn-primary">Book it</a> -->
+              <input type="submit" class="btn btn-primary" value="Book it">
+          </form>
             </div>
           </div>
           <div class="card" style="min-width: 18rem;">
@@ -41,27 +43,9 @@
               <a href="{{ url_for('booker_assets.booker_tag') }}" class="btn btn-primary">Book it</a>
             </div>
           </div>
-          <!-- <div class="card" style="min-width: 18rem;">
-            <img class="card-img-top" src="../static/images/ladderMatch.jpeg" alt="Card image cap">
-            <div class="card-body">
-              <h5 class="card-title">Ladder Match</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="{{ url_for('booker_assets.booker') }}" class="btn btn-primary">Book it</a>
-            </div>
-          </div> -->
         <!--End of card group  -->
         </div>
-
-        
-        
-
-
-        
-        <!-- <a href="{{ url_for('booker_assets.booker') }}" role="button"  class="btn btn-secondary btn-lg btn-block">Singles match</a>
-        <a href="{{ url_for('booker_assets.booker_tag') }}" role="button"  class="btn btn-secondary btn-lg btn-block">Tag match</a> -->
-
         <p></p>
-
     </section>
   </div>
 
